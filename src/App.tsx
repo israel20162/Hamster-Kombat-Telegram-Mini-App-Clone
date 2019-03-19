@@ -31,7 +31,7 @@ const App: React.FC = () => {
   const set = setInterval(() => {
     startAutoSave();
   }, 60000);
-  // Start autosave when the component mounts
+  // Start autosave when the component mounts 
   useEffect(() => {
     startAutoSave();
 
