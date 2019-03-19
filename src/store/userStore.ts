@@ -129,6 +129,7 @@ const useUserStore = create(
              
                     get().saveProgress(); // Save after points update
                     console.log('Auto-saving...');
+                    alert('hi')
               
                 // set({ autoSaveIntervalId: intervalId });
 
