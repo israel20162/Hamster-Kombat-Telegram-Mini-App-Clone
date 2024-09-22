@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { dollarCoin } from "../images";
+import { binanceLogo, dailyCipher, dollarCoin, mainCharacter } from "../images";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
 import { Switch, Match } from "../utils/reactComponents";
@@ -7,6 +7,7 @@ import Markets from "./Mine/Markets";
 import PR from "./Mine/Pr&Team";
 import Legal from "./Mine/Legal";
 import Specials from "./Mine/Specials";
+import CardModal from "../components/cardModal";
 interface Props {
   points: number;
   coins: number;
@@ -21,6 +22,7 @@ const Mine: React.FC<Props> = (props) => {
   const pointsToAdd = props.pointsToAdd;
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
   const [tab, setTab] = useState("Markets");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     const updateCountdowns = () => {
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
@@ -31,12 +33,47 @@ const Mine: React.FC<Props> = (props) => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const MarketCards = [
+    {
+      title: "binance",
+      description: "",
+      image: binanceLogo,
+      profitPerHour: 1000,
+      level: 1,
+      price: 4000,
+    },
+    {
+      title: "BTC",
+      description: "",
+      image: dollarCoin,
+      profitPerHour:3800,
+      level:1,
+      price:3800,
+    },
+    {
+      title: "Code lock",
+      description: "",
+      image: dailyCipher,
+      profitPerHour:3800,
+      level:1,
+      price:3800,
+    },
+    {
+      title: "hamster",
+      description: "",
+      image: mainCharacter,
+      profitPerHour:3800,
+      level:1,
+      price:3800,
+    },
+  ];
   return (
     <>
-      <div className="bg-black flex justify-center max-h-screen overflow-scroll ">
+      <div className="bg-black flex justify-center  ">
         <div className="w-full mx-auto bg-black text-white h-screen  max-h-screen overflow-scroll font-bold flex flex-col max-w-xl">
           <div className="flex-grow   mt-20 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0 ">
-            <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025]  max-h-screen  rounded-t-[46px]">
+            <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025]  h-screen overflow-auto max-h-screen  rounded-t-[46px]">
               <section className="flex justify-evenly   !text-nowrap mx-auto my-8 gap-1">
                 <div className="flex flex-col   bg-gray-700 rounded-lg text-xs gap-1 px-4 py-2 mx-auto justify-between items-center">
                   <span className="text-[#f3ba2f] mb-2">Earn per tap</span>
@@ -110,8 +147,8 @@ const Mine: React.FC<Props> = (props) => {
                         onClick={() => setTab("Markets")}
                       >
                         <a
-                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
-                            tab == "Markets" && "bg-black/10 p-2"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 border-0 rounded-md cursor-pointer p-2  ${
+                            tab == "Markets" && "bg-black/10"
                           }`}
                           role="tab"
                         >
@@ -123,8 +160,8 @@ const Mine: React.FC<Props> = (props) => {
                         onClick={() => setTab("PR&Team")}
                       >
                         <a
-                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
-                            tab == "PR&Team" && "bg-black/10 p-2"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 border-0 rounded-md cursor-pointer p-2  ${
+                            tab == "PR&Team" && "bg-black/10"
                           }`}
                           data-tab-target
                           role="tab"
@@ -138,8 +175,8 @@ const Mine: React.FC<Props> = (props) => {
                         onClick={() => setTab("Legal")}
                       >
                         <a
-                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
-                            tab == "Legal" && "bg-black/10 p-2"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 border-0 rounded-md cursor-pointer p-2  ${
+                            tab == "Legal" && "bg-black/10"
                           }`}
                           data-tab-target
                           role="tab"
@@ -153,8 +190,8 @@ const Mine: React.FC<Props> = (props) => {
                         onClick={() => setTab("Specials")}
                       >
                         <a
-                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
-                            tab == "Specials" && "bg-black/10 p-2"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 border-0 rounded-md cursor-pointer p-2  ${
+                            tab == "Specials" && "bg-black/10"
                           }`}
                           data-tab-target
                           role="tab"
@@ -169,7 +206,13 @@ const Mine: React.FC<Props> = (props) => {
               <section>
                 <Switch fallback={<p>A fallback</p>}>
                   <Match when={tab == "Markets"}>
-                    <Markets />
+                    <Markets
+                      onClick={() => {
+                        setIsModalOpen((prev) => !prev);
+                      }}
+                      isOpen={isModalOpen}
+                      cards={MarketCards}
+                    />
                   </Match>
 
                   <Match when={tab == "PR&Team"}>
@@ -188,6 +231,12 @@ const Mine: React.FC<Props> = (props) => {
           </div>
         </div>
       </div>
+      <CardModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen((prev) => !prev);
+        }}
+      />
     </>
   );
 };

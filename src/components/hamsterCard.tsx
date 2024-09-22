@@ -1,48 +1,67 @@
 import React from "react";
 import { dollarCoin } from "../images";
+import formatProfitPerHour from "../utils/formatProfitPerHour";
+import formatCardPrice from "../utils/formatCardPrice";
 
+interface HamsterCardProps {
+  onClick?: () => void;
+  cardDeatails: {
+    title: string;
+    description: string;
+    image: string;
+    profitPerHour: number;
+    level: number;
+    price: number;
+  };
+}
 
+const HamsterCard: React.FC<HamsterCardProps> = (props) => {
+  const { title, description, image, profitPerHour, level, price } =
+    props.cardDeatails;
 
-const HamsterCard: React.FC = () => {
   return (
-    <div className="w-[95%] rounded-xl my-4 mx-auto flex flex-col text-nowrap bg-gray-600 p-1  text-center col-span-1">
+    <div
+      className="w-[95%] rounded-xl my-4 mx-auto flex flex-col text-nowrap bg-gray-600 p-1  text-center col-span-1"
+      onClick={props.onClick}
+    >
       <div className="max-w-sm rounded overflow-hidden shadow-lg">
         <img
-          className="w-10/12 mt-6 rounded-lg h-24 mx-auto"
-          src="https://v1.tailwindcss.com/img/card-top.jpg"
+          className="w-10/12 mt-6 rounded-lg h-20 object-contain mx-auto"
+          src={image}
           alt="Sunset in the mountains"
         />
         <div className="mx-auto py-4 text-center flex flex-col items-center gap-2">
-          <p className="font-bold text-xs mb-2">The Coldest Sunset</p>
+          <p className="font-bold text-sm mb-2 capitalize">{title}</p>
           <p className="text-slate-400 text-xs font-extrabold text-wrap">
-            Lorem ipsum dolor
+            {description}
           </p>
-          <p className="text-slate-400 text-xs flex items-center gap-2">
+          {/* text-xxs is a css class for smaller text */}
+          <p className="text-slate-200 text-xxs flex items-center gap-2">
             Profit per hour{" "}
-            <span className="flex items-center">
-              {" "}
+            <span className="flex items-center gap-1 object-contain">
               <img
                 src={dollarCoin}
                 alt="Dollar Coin"
-                className="w-[18px] h-[18px]"
+                className="w-[15px] h-[15px]"
               />
-              +4.3k
+              {formatProfitPerHour(profitPerHour)}
             </span>
           </p>
         </div>
         <hr className="opacity-25" />
-        <div className="px-6 pt-4 pb-2 flex items-center justify-between">
-          <span className="border-r border-slate-300 pt-2 pr-2">lvl 13</span>
-        
-          <span className="flex items-center">
-            {" "}
+        <div className=" py-4 flex items-center justify-between  divide-solid divide-x divide-opacity-25 text-center ">
+          <p className=" border-opacity-25 border-slate-300   w-1/3">
+            lvl {level}
+          </p>
+
+          <p className="flex items-center justify-center gap-1 mx-auto w-2/3">
             <img
               src={dollarCoin}
               alt="Dollar Coin"
-              className="w-[18px] h-[18px]"
+              className="w-[15px] h-[15px]"
             />
-            151.3k
-          </span>
+            <span> {formatCardPrice(price)}</span>
+          </p>
         </div>
       </div>
     </div>

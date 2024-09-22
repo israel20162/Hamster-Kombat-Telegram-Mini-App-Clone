@@ -132,11 +132,11 @@ const Exchange: React.FC<Props> = (props) => {
   }, [profitPerHour, energy]);
 
   return (
-    <div className="bg-black flex justify-center  overflow-scroll">
-      <div className="w-full bg-black text-white h-screen font-bold flex flex-col max-w-xl">
+    <div className="bg-black flex justify-center h-screen overflow-scroll">
+      <div className=" bg-black text-white  font-bold flex flex-col max-w-xl w-screen ">
         <div className="px-4 z-10">
           <div className="flex items-center space-x-2 pt-4">
-            <div className="p-1 rounded-lg bg-[#1d2025]">
+            <div className="p-1 rounded-lg bg-[#1d2025] ">
               <Hamster size={24} className="text-[#d4d4d4]" />
             </div>
             <div>
@@ -178,7 +178,9 @@ const Exchange: React.FC<Props> = (props) => {
                     alt="Dollar Coin"
                     className="w-[18px] h-[18px]"
                   />
-                  <p className="text-sm">{formatProfitPerHour(profitPerHour)}</p>
+                  <p className="text-sm">
+                    {formatProfitPerHour(profitPerHour)}
+                  </p>
                   <Info size={20} className="text-[#43433b]" />
                 </div>
               </div>
@@ -188,8 +190,8 @@ const Exchange: React.FC<Props> = (props) => {
           </div>
         </div>
 
-        <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0">
-          <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025] rounded-t-[46px]">
+        <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0 ">
+          <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025]  rounded-t-[46px] flex flex-col h- ">
             <div className="px-4 mt-6 flex justify-between gap-2">
               <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
                 <div className="dot"></div>
@@ -256,7 +258,7 @@ const Exchange: React.FC<Props> = (props) => {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between  justify-self-end mt-20 px-4 ">
+            <div className="flex justify-between   pt-10  h-full px-4 bg-[#1d2025]">
               <div className="font-bold text-xl">
                 {energy} / {totalEnergy}
               </div>

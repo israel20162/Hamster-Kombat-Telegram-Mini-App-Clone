@@ -11,7 +11,7 @@ const App: React.FC = () => {
   switch (page) {
     case "Exchange":
       return (
-        <>
+        <div className="bg-black relative ">
           <Exchange
             points={points}
             pointsToAdd={pointsToAdd}
@@ -20,7 +20,7 @@ const App: React.FC = () => {
           />
 
           <Footer setpage={setPage} page={page} />
-        </>
+        </div>
       );
 
     case "Mine":
