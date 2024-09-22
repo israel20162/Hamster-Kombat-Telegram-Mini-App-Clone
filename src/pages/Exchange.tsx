@@ -7,7 +7,6 @@ import {
   dailyCombo,
   dailyReward,
   dollarCoin,
-  hamsterCoin,
   mainCharacter,
 } from "../images";
 import Info from "../icons/Info";
@@ -58,7 +57,7 @@ const Exchange: React.FC<Props> = (props) => {
     []
   );
   const [energy, setEnergy] = useState<number>(1000);
-  const [totalEnergy, setTotalEnergy] = useState<number>(1000);
+  const [totalEnergy] = useState<number>(1000);
 
 
 
