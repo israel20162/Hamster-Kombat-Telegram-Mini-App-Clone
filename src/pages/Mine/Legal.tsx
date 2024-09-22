@@ -2,7 +2,7 @@ import React from "react";
 import HamsterCard from "../../components/hamsterCard";
 
 
-const Markets: React.FC =()=>{
+const Legal:React.FC =()=>{
     return (
       <div className="grid grid-cols-2 w-[95%] mx-auto ">
         <HamsterCard />
@@ -13,4 +13,4 @@ const Markets: React.FC =()=>{
     );
 }
 
-export default Markets
+export default Legal

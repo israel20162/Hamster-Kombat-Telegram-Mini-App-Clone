@@ -4,6 +4,9 @@ import formatProfitPerHour from "../utils/formatProfitPerHour";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
 import { Switch, Match } from "../utils/reactComponents";
 import Markets from "./Mine/Markets";
+import PR from "./Mine/Pr&Team";
+import Legal from "./Mine/Legal";
+import Specials from "./Mine/Specials";
 interface Props {
   points: number;
   coins: number;
@@ -163,21 +166,21 @@ const Mine: React.FC<Props> = (props) => {
                   </div>
                 </div>
               </section>
-              <section className="grid grid-cols-2 w-[95%] mx-auto ">
+              <section>
                 <Switch fallback={<p>A fallback</p>}>
                   <Match when={tab == "Markets"}>
-                    <p>Markets</p>
+                    <Markets />
                   </Match>
 
                   <Match when={tab == "PR&Team"}>
-                    <p>PR&Team</p>
+                    <PR />
                   </Match>
 
                   <Match when={tab == "Legal"}>
-                    <p>Legal</p>
+                    <Legal />
                   </Match>
                   <Match when={tab == "Specials"}>
-                    <p>Specials</p>
+                    <Specials />
                   </Match>
                 </Switch>
               </section>
