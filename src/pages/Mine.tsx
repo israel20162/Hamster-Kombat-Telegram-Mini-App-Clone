@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { dollarCoin } from "../images";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
-import HamsterCard from "../components/hamsterCard";
+import { Switch, Match } from "../utils/reactComponents";
+import Markets from "./Mine/Markets";
 interface Props {
   points: number;
   coins: number;
@@ -16,6 +17,7 @@ const Mine: React.FC<Props> = (props) => {
   const profitPerHour = props.profitPerHour;
   const pointsToAdd = props.pointsToAdd;
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
+  const [tab, setTab] = useState("Markets");
   useEffect(() => {
     const updateCountdowns = () => {
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
@@ -100,17 +102,27 @@ const Mine: React.FC<Props> = (props) => {
                       className="relative flex flex-wrap items-center px-1.5 py-3 list-none rounded-lg bg-gray-700"
                       role="list"
                     >
-                      <li className="z-30 flex-auto text-center">
+                      <li
+                        className="z-30 flex-auto text-center"
+                        onClick={() => setTab("Markets")}
+                      >
                         <a
-                          className="z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   bg-black/10 p-4"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
+                            tab == "Markets" && "bg-black/10 p-2"
+                          }`}
                           role="tab"
                         >
                           Markets
                         </a>
                       </li>
-                      <li className="z-30 flex-auto text-center">
+                      <li
+                        className="z-30 flex-auto text-center"
+                        onClick={() => setTab("PR&Team")}
+                      >
                         <a
-                          className="z-30 flex items-center justify-center w-full px-0 py-2 mb-0 text-sm transition-all ease-in-out border-0 rounded-lg cursor-pointer  bg-inherit"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
+                            tab == "PR&Team" && "bg-black/10 p-2"
+                          }`}
                           data-tab-target
                           role="tab"
                           aria-selected="false"
@@ -118,9 +130,14 @@ const Mine: React.FC<Props> = (props) => {
                           PR&Team
                         </a>
                       </li>
-                      <li className="z-30 flex-auto text-center">
+                      <li
+                        className="z-30 flex-auto text-center"
+                        onClick={() => setTab("Legal")}
+                      >
                         <a
-                          className="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer bg-inherit"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
+                            tab == "Legal" && "bg-black/10 p-2"
+                          }`}
                           data-tab-target
                           role="tab"
                           aria-selected="false"
@@ -128,12 +145,16 @@ const Mine: React.FC<Props> = (props) => {
                           Legal
                         </a>
                       </li>
-                      <li className="z-30 flex-auto text-center">
+                      <li
+                        className="z-30 flex-auto text-center"
+                        onClick={() => setTab("Specials")}
+                      >
                         <a
-                          className="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer bg-inherit"
+                          className={`z-30 flex items-center justify-center w-full  text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer   ${
+                            tab == "Specials" && "bg-black/10 p-2"
+                          }`}
                           data-tab-target
                           role="tab"
-                          aria-selected="false"
                         >
                           Specials
                         </a>
@@ -143,10 +164,22 @@ const Mine: React.FC<Props> = (props) => {
                 </div>
               </section>
               <section className="grid grid-cols-2 w-[95%] mx-auto ">
-                <HamsterCard />
-                <HamsterCard />
-                <HamsterCard />
-                <HamsterCard />
+                <Switch fallback={<p>A fallback</p>}>
+                  <Match when={tab == "Markets"}>
+                    <p>Markets</p>
+                  </Match>
+
+                  <Match when={tab == "PR&Team"}>
+                    <p>PR&Team</p>
+                  </Match>
+
+                  <Match when={tab == "Legal"}>
+                    <p>Legal</p>
+                  </Match>
+                  <Match when={tab == "Specials"}>
+                    <p>Specials</p>
+                  </Match>
+                </Switch>
               </section>
             </div>
           </div>

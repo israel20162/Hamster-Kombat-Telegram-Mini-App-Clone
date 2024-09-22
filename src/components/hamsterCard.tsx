@@ -32,8 +32,8 @@ const HamsterCard: React.FC = () => {
         </div>
         <hr className="opacity-25" />
         <div className="px-6 pt-4 pb-2 flex items-center justify-between">
-          <span>lvl 13</span>
-          <hr className="rotate-90" />
+          <span className="border-r border-slate-300 pt-2 pr-2">lvl 13</span>
+        
           <span className="flex items-center">
             {" "}
             <img
