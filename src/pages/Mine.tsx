@@ -8,6 +8,7 @@ import PR from "./Mine/Pr&Team";
 import Legal from "./Mine/Legal";
 import Specials from "./Mine/Specials";
 import CardModal from "../components/cardModal";
+import { CardTypes } from "../utils/types";
 interface Props {
   points: number;
   coins: number;
@@ -23,6 +24,14 @@ const Mine: React.FC<Props> = (props) => {
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
   const [tab, setTab] = useState("Markets");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentCardInView, setCurrentCardInView] = useState<CardTypes>({
+    title: "",
+    description: "",
+    image: "",
+    profitPerHour: 0,
+    level: 0,
+    price: 0,
+  });
   useEffect(() => {
     const updateCountdowns = () => {
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
@@ -37,7 +46,7 @@ const Mine: React.FC<Props> = (props) => {
   const MarketCards = [
     {
       title: "binance",
-      description: "",
+      description: "Lord binance",
       image: binanceLogo,
       profitPerHour: 1000,
       level: 1,
@@ -45,27 +54,27 @@ const Mine: React.FC<Props> = (props) => {
     },
     {
       title: "BTC",
-      description: "",
+      description: "Lord Btc",
       image: dollarCoin,
-      profitPerHour:3800,
-      level:1,
-      price:3800,
+      profitPerHour: 3800,
+      level: 1,
+      price: 3800,
     },
     {
       title: "Code lock",
-      description: "",
+      description: "Lord Cipher",
       image: dailyCipher,
-      profitPerHour:3800,
-      level:1,
-      price:3800,
+      profitPerHour: 3800,
+      level: 1,
+      price: 3800,
     },
     {
       title: "hamster",
-      description: "",
+      description: "Lord hamster",
       image: mainCharacter,
-      profitPerHour:3800,
-      level:1,
-      price:3800,
+      profitPerHour: 3800,
+      level: 1,
+      price: 3800,
     },
   ];
   return (
@@ -207,8 +216,9 @@ const Mine: React.FC<Props> = (props) => {
                 <Switch fallback={<p>A fallback</p>}>
                   <Match when={tab == "Markets"}>
                     <Markets
-                      onClick={() => {
+                      onClick={(card) => {
                         setIsModalOpen((prev) => !prev);
+                        setCurrentCardInView(card)
                       }}
                       isOpen={isModalOpen}
                       cards={MarketCards}
@@ -236,6 +246,7 @@ const Mine: React.FC<Props> = (props) => {
         onClose={() => {
           setIsModalOpen((prev) => !prev);
         }}
+        cardDetails={currentCardInView}
       />
     </>
   );

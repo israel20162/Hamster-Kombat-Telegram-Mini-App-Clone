@@ -2,9 +2,10 @@ import React from "react";
 import { dollarCoin } from "../images";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 import formatCardPrice from "../utils/formatCardPrice";
+import { CardTypes } from "../utils/types";
 
 interface HamsterCardProps {
-  onClick?: () => void;
+  onClick: (card:CardTypes) => void;
   cardDeatails: {
     title: string;
     description: string;
@@ -22,7 +23,7 @@ const HamsterCard: React.FC<HamsterCardProps> = (props) => {
   return (
     <div
       className="w-[95%] rounded-xl my-4 mx-auto flex flex-col text-nowrap bg-gray-600 p-1  text-center col-span-1"
-      onClick={props.onClick}
+      onClick={()=>props.onClick(props.cardDeatails)}
     >
       <div className="max-w-sm rounded overflow-hidden shadow-lg">
         <img
@@ -32,7 +33,7 @@ const HamsterCard: React.FC<HamsterCardProps> = (props) => {
         />
         <div className="mx-auto py-4 text-center flex flex-col items-center gap-2">
           <p className="font-bold text-sm mb-2 capitalize">{title}</p>
-          <p className="text-slate-400 text-xs font-extrabold text-wrap">
+          <p className="text-slate-200 text-xs font-bold text-wrap">
             {description}
           </p>
           {/* text-xxs is a css class for smaller text */}
