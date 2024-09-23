@@ -7,6 +7,10 @@ import dailyCombo from "./daily-combo.png";
 import mainCharacter from "./main-character.png";
 import hamsterCoin from "./hamster-coin.png";
 import pepe from './pepe.webp'
+import legalHamster from './legal-hamster.jpg'
+import boardHamster from './boardroom-hamster.png'
+import armyHamster from './army-hamster.png'
+import officeHamster from './office-hamster.png'
 
 export {
     hamsterExchange,
@@ -17,5 +21,9 @@ export {
     dailyCombo,
     mainCharacter,
     hamsterCoin,
-    pepe
+    pepe,
+    legalHamster,
+    officeHamster,
+    armyHamster,
+    boardHamster,
 };

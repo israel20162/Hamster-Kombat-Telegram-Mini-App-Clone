@@ -5,7 +5,7 @@ import formatCardPrice from "../utils/formatCardPrice";
 import { CardTypes } from "../utils/types";
 
 interface HamsterCardProps {
-  onClick: (card:CardTypes) => void;
+  onClick: (card: CardTypes) => void;
   cardDeatails: {
     title: string;
     description: string;
@@ -23,11 +23,11 @@ const HamsterCard: React.FC<HamsterCardProps> = (props) => {
   return (
     <div
       className="w-[95%] rounded-xl my-4 mx-auto flex flex-col text-nowrap bg-gray-600 p-1  text-center col-span-1"
-      onClick={()=>props.onClick(props.cardDeatails)}
+      onClick={() => props.onClick(props.cardDeatails)}
     >
       <div className="max-w-sm rounded overflow-hidden shadow-lg">
         <img
-          className="w-10/12 mt-6 rounded-lg h-20 object-contain mx-auto"
+          className="w-11/12 mt-6 rounded-xl h-24 object-contain mx-auto "
           src={image}
           alt="Sunset in the mountains"
         />
