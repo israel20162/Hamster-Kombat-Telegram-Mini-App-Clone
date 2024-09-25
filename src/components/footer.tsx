@@ -30,7 +30,12 @@ const Footer: React.FC<FooterProps> = (props) => {
         <Mine className="w-8 h-8 mx-auto" />
         <p className="mt-1">Mine</p>
       </div>
-      <div className="text-center text-[#85827d] w-1/5">
+      <div
+        onClick={() => props.setpage("Friends")}
+        className={`text-center text-[#85827d] p-2  m-1 w-1/5 ${
+          props.page == "Friends" && "bg-[#1c1f24]   rounded-2xl"
+        }`}
+      >
         <Friends className="w-8 h-8 mx-auto" />
         <p className="mt-1">Friends</p>
       </div>

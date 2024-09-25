@@ -3,6 +3,7 @@ import Exchange from "./pages/Exchange";
 import Footer from "./components/footer";
 import Mine from "./pages/Mine";
 import { Switch, Match } from "./utils/reactComponents";
+import Friends from "./pages/Friends";
 const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const pointsToAdd = 11;
@@ -35,15 +36,9 @@ const App: React.FC = () => {
           <Footer setpage={setPage} page={page} />
         </div>
       </Match>
-      <Match when={page == "Exchange"}>
+      <Match when={page == "Friends"}>
         <div className="bg-black relative ">
-          <Exchange
-            points={points}
-            pointsToAdd={pointsToAdd}
-            setPoints={setPoints}
-            profitPerHour={profitPerHour}
-          />
-
+          <Friends />
           <Footer setpage={setPage} page={page} />
         </div>
       </Match>
@@ -52,13 +47,9 @@ const App: React.FC = () => {
 
   switch (page) {
     case "Exchange":
-     
+
     case "Mine":
-      return (
-        <>
-        
-        </>
-      );
+      return <></>;
 
     default:
       break;

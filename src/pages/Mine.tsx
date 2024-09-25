@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { armyHamster, binanceLogo, boardHamster, dailyCipher, dollarCoin, legalHamster, mainCharacter, officeHamster, pepe } from "../images";
+import {
+  armyHamster,
+  binanceLogo,
+  boardHamster,
+  dailyCipher,
+  dollarCoin,
+  legalHamster,
+  mainCharacter,
+  officeHamster,
+  pepe,
+} from "../images";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
 import { Switch, Match } from "../utils/reactComponents";
@@ -9,6 +19,8 @@ import Legal from "./Mine/Legal";
 import Specials from "./Mine/Specials";
 import CardModal from "../components/cardModal";
 import { CardTypes } from "../utils/types";
+
+
 interface Props {
   points: number;
   coins: number;

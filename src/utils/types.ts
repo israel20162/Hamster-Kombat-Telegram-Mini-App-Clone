@@ -11,3 +11,11 @@ export type CardTypes = {
     level: number;
     price: number;
 };
+
+export type FriendTypes = {
+    name:string
+    level: string;
+    points: number;
+    profitPerHour?: number;
+    hasTelgramPremium?: boolean;
+}
