@@ -1,0 +1,1 @@
+export const API_URL = "https://telegram-mini-app-uu3y.onrender.com"

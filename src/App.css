@@ -5,10 +5,16 @@
 .top-glow {
   box-shadow: 0 -26px 20px rgba(243, 186, 47, 0.3);
 }
+.round-glow {
+  background-color: #ffa500; /* Orange background */
+  box-shadow: 0 0 50px 5px rgba(255, 165, 0, 0.8); /* Orange glow */
+  border-radius: 100%; /* Optional: round the corners */
+  background-repeat: round;
+}
 
 .text-xxs {
   font-size: 0.55rem /* 8px */;
-  line-height: .75rem /* 12px */;
+  line-height: 0.75rem /* 12px */;
 }
 
 /* Define the keyframes for the blinking animation */
