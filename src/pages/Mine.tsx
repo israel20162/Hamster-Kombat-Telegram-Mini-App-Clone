@@ -152,7 +152,7 @@ const Mine: React.FC<Props> = (props) => {
       <div className="bg-black flex justify-center  ">
         <div className="w-full mx-auto bg-black text-white h-screen  max-h-screen overflow-scroll font-bold flex flex-col max-w-xl">
           <div className="flex-grow   mt-20 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0 ">
-            <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025]  h-screen rounded-t-[46px]">
+            <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025] overflow-scroll  h-screen rounded-t-[46px]">
               <section className="flex justify-evenly   !text-nowrap mx-auto my-8 gap-1">
                 <div className="flex flex-col   bg-gray-700 rounded-lg text-xs gap-1 px-4 py-2 mx-auto justify-between items-center">
                   <span className="text-[#f3ba2f] mb-2">Earn per tap</span>

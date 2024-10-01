@@ -9,7 +9,7 @@ interface MarketProps {
 }
 const Markets: React.FC<MarketProps> = (props) => {
   return (
-    <div className="grid grid-cols-2 w-[95%] mx-auto ">
+    <div className="grid grid-cols-2 w-[95%] mx-auto">
       {props.cards.map((card, index) => (
         <div key={index}>
           <HamsterCard onClick={props.onClick} cardDeatails={card} />

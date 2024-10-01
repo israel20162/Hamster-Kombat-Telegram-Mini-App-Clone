@@ -3,7 +3,7 @@ import { dollarCoin } from "../images";
 import Reload from "../icons/Reload";
 import { Show } from "../utils/reactComponents";
 import FriendCard from "../components/friendCard";
-
+// import WebApp from "@twa-dev/sdk";
 const Friends: React.FC = () => {
   const Friends = [
     {
@@ -64,8 +64,8 @@ const Friends: React.FC = () => {
     },
   ];
   return (
-    <div className="bg-black flex justify-center ">
-      <div className="w-full mx-auto bg-black text-white h-screen  max-h-screen overflow-scroll font-bold flex flex-col max-w-xl gap-4">
+    <div className="bg-black  flex justify-center ">
+      <div className="w-full  mx-auto bg-black text-white h-screen max-h-screen overflow-scroll font-bold flex flex-col  gap-4">
         <section className="text-center w-full mx-auto pt-16 flex flex-col gap-4">
           <h1 className="text-3xl"> Invite Friends!</h1>
           <h2 className="text-slate-200">
@@ -119,7 +119,7 @@ const Friends: React.FC = () => {
         <div className="text-center my-5 text-xl w-full text-indigo-700">
           <a href="">More bonuses</a>
         </div>
-        <section className="text-center w-full mx-auto  flex flex-col gap-4">
+        <section className="text-center w-full mx-auto  flex flex-col gap-4 relative">
           <div className="justify-between flex w-full items-center px-5">
             <span>List of your friends (0)</span>
             <button>
@@ -151,6 +151,7 @@ const Friends: React.FC = () => {
               </div>
             </Show>
           </div>
+         
         </section>
       </div>
     </div>

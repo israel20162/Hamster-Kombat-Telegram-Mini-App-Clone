@@ -1,3 +1,12 @@
+import { Telegram } from "@twa-dev/types"
+
+declare global {
+    interface Window {
+        Telegram: Telegram;
+    }
+}
+
+
 export type IconProps = {
     size?: number;
     className?: string;

@@ -5,11 +5,14 @@ import Mine from "./pages/Mine";
 import { Switch, Match } from "./utils/reactComponents";
 import Friends from "./pages/Friends";
 import Earn from "./pages/Earn";
+import { useTelegram } from "./hooks/useTelegram";
 const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const pointsToAdd = 11;
   const [points, setPoints] = useState(22749365);
   const profitPerHour = 126420;
+  const { user } = useTelegram();
+console.log(user);
 
   return (
     <Switch fallback={<p>A fallback</p>}>
@@ -38,7 +41,7 @@ const App: React.FC = () => {
         </div>
       </Match>
       <Match when={page == "Friends"}>
-        <div className="bg-black relative ">
+        <div className="bg-black  ">
           <Friends />
           <Footer setpage={setPage} page={page} />
         </div>
