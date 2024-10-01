@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import Hamster from "../icons/Hamster";
+
 import {
   binanceLogo,
   dailyCipher,
@@ -18,6 +19,7 @@ interface Props {
   setPoints: React.Dispatch<React.SetStateAction<number>>;
   pointsToAdd: number;
   profitPerHour: number;
+  user:any
 }
 
 const Exchange: React.FC<Props> = (props) => {
@@ -140,7 +142,7 @@ const Exchange: React.FC<Props> = (props) => {
               <Hamster size={24} className="text-[#d4d4d4]" />
             </div>
             <div>
-              <p className="text-sm">Nikandr (CEO)</p>
+              <p className="text-sm">{props.user?.userName} (CEO)</p>
             </div>
           </div>
           <div className="flex items-center justify-between space-x-4 mt-1">

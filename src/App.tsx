@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [points, setPoints] = useState(22749365);
   const profitPerHour = 126420;
   const { user } = useTelegram();
-console.log(user);
+
 
   return (
     <Switch fallback={<p>A fallback</p>}>
@@ -23,6 +23,7 @@ console.log(user);
             pointsToAdd={pointsToAdd}
             setPoints={setPoints}
             profitPerHour={profitPerHour}
+            user={user}
           />
 
           <Footer setpage={setPage} page={page} />
