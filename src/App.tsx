@@ -8,16 +8,15 @@ import Earn from "./pages/Earn";
 import { useTelegram } from "./hooks/useTelegram";
 import { createOrGetUser } from "./server/Api";
 
-
 const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const pointsToAdd = 11;
   const [points, setPoints] = useState(22749365);
   const profitPerHour = 126420;
   const { user } = useTelegram();
- 
+  createOrGetUser(user?.id);
+  alert(user?.id);
   useEffect(() => {
-
     createOrGetUser(user?.id);
   }, []);
 
