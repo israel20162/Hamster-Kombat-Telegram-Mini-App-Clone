@@ -34,9 +34,9 @@ export async function createOrGetUser(telegramId: number | undefined) {
             body: JSON.stringify({ telegramId })
         });
 
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //     throw new Error(`Error: ${response.status}`);
+        // }
 
         const data = await response.json();
         console.log('User created successfully:', data);
