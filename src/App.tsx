@@ -18,7 +18,7 @@ const App: React.FC = () => {
  
   useEffect(() => {
 
-    createOrGetUser(669088808876556);
+    createOrGetUser(user?.id);
   }, []);
 
   return (
