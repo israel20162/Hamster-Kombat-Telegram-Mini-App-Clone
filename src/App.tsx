@@ -16,7 +16,6 @@ const App: React.FC = () => {
   const { user } = useTelegram();
  
   useEffect(() => {
-    alert(user?.id)
     createOrGetUser(user?.id);
   }, []);
 
