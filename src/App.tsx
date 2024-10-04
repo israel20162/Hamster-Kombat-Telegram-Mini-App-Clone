@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Exchange from "./pages/Exchange";
 import Footer from "./components/footer";
 import Mine from "./pages/Mine";
@@ -6,6 +6,9 @@ import { Switch, Match } from "./utils/reactComponents";
 import Friends from "./pages/Friends";
 import Earn from "./pages/Earn";
 import { useTelegram } from "./hooks/useTelegram";
+import { createOrGetUser } from "./server/Api";
+
+
 const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const pointsToAdd = 11;
@@ -13,6 +16,9 @@ const App: React.FC = () => {
   const profitPerHour = 126420;
   const { user } = useTelegram();
 
+  useEffect(() => {
+    createOrGetUser(user?.id);
+  }, []);
 
   return (
     <Switch fallback={<p>A fallback</p>}>

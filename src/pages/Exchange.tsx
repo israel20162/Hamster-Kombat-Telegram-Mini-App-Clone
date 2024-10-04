@@ -19,7 +19,7 @@ interface Props {
   setPoints: React.Dispatch<React.SetStateAction<number>>;
   pointsToAdd: number;
   profitPerHour: number;
-  user:any
+  user: any;
 }
 
 const Exchange: React.FC<Props> = (props) => {
@@ -51,7 +51,7 @@ const Exchange: React.FC<Props> = (props) => {
   const points = props.points;
   const setPoints = props.setPoints;
   const pointsToAdd = props.pointsToAdd;
-  const profitPerHour = props.profitPerHour
+  const profitPerHour = props.profitPerHour;
 
   const [levelIndex, setLevelIndex] = useState(6);
 
@@ -61,13 +61,9 @@ const Exchange: React.FC<Props> = (props) => {
   const [energy, setEnergy] = useState<number>(1000);
   const [totalEnergy] = useState<number>(1000);
 
-
-
   const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
   const [dailyCipherTimeLeft, setDailyCipherTimeLeft] = useState("");
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
-
-
 
   useEffect(() => {
     const updateCountdowns = () => {
@@ -113,7 +109,7 @@ const Exchange: React.FC<Props> = (props) => {
       ((points - currentLevelMin) / (nextLevelMin - currentLevelMin)) * 100;
     return Math.min(progress, 100);
   };
- 
+
   useEffect(() => {
     const currentLevelMin = levelMinPoints[levelIndex];
     const nextLevelMin = levelMinPoints[levelIndex + 1];
@@ -142,7 +138,9 @@ const Exchange: React.FC<Props> = (props) => {
               <Hamster size={24} className="text-[#d4d4d4]" />
             </div>
             <div>
-              <p className="text-sm">{props.user?.username} (CEO)</p>
+              <p className="text-sm">
+                {props.user?.username || props.user?.first_name}
+              </p>
             </div>
           </div>
           <div className="flex items-center justify-between space-x-4 mt-1">
@@ -194,7 +192,7 @@ const Exchange: React.FC<Props> = (props) => {
 
         <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0 ">
           <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025]  rounded-t-[46px] flex flex-col h- ">
-            <div className="px-4 mt-6 flex justify-between gap-2">
+            {/* <div className="px-4 mt-6 flex justify-between gap-2">
               <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
                 <div className="dot"></div>
                 <img
@@ -237,7 +235,7 @@ const Exchange: React.FC<Props> = (props) => {
                   {dailyComboTimeLeft}
                 </p>
               </div>
-            </div>
+            </div> */}
 
             <div className="px-4 mt-4 flex justify-center">
               <div className="px-4 py-2 flex items-center space-x-2">
