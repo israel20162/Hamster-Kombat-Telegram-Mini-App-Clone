@@ -24,6 +24,14 @@ const App: React.FC = () => {
     WebApp.ready();
   }, []);
 
+  setTimeout(() => {
+     async function send() {
+       await createOrGetUser(user?.id);
+     }
+
+     send();
+  }, 2000);
+
   return (
     <Switch fallback={<p>A fallback</p>}>
       <Match when={page == "Exchange"}>
