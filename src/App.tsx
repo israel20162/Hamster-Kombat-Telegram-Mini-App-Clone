@@ -13,12 +13,15 @@ const App: React.FC = () => {
   const pointsToAdd = 11;
   const [points, setPoints] = useState(22749365);
   const profitPerHour = 126420;
-  const { user,WebApp } = useTelegram();
- 
+  const { user, WebApp } = useTelegram();
+
   useEffect(() => {
-    createOrGetUser(user?.id);
-    WebApp.ready()
-    
+    async function send() {
+      await createOrGetUser(user?.id);
+    }
+
+    send();
+    WebApp.ready();
   }, []);
 
   return (
