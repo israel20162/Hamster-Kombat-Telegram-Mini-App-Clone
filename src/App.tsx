@@ -14,8 +14,7 @@ const App: React.FC = () => {
   const [points, setPoints] = useState(22749365);
   const profitPerHour = 126420;
   const { user } = useTelegram();
-  createOrGetUser(user?.id);
-  alert(user?.id);
+ 
   useEffect(() => {
     createOrGetUser(user?.id);
   }, []);
