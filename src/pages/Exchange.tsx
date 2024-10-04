@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import Hamster from "../icons/Hamster";
-
 import {
   binanceLogo,
-  dailyCipher,
-  dailyCombo,
-  dailyReward,
   dollarCoin,
   mainCharacter,
 } from "../images";
 import Info from "../icons/Info";
 import Settings from "../icons/Settings";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
-import calculateTimeLeft from "../utils/calculateTimeLeft";
+// import calculateTimeLeft from "../utils/calculateTimeLeft";
 interface Props {
   points: number;
   setPoints: React.Dispatch<React.SetStateAction<number>>;
@@ -61,22 +57,22 @@ const Exchange: React.FC<Props> = (props) => {
   const [energy, setEnergy] = useState<number>(1000);
   const [totalEnergy] = useState<number>(1000);
 
-  const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
-  const [dailyCipherTimeLeft, setDailyCipherTimeLeft] = useState("");
-  const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
+  // const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
+  // const [dailyCipherTimeLeft, setDailyCipherTimeLeft] = useState("");
+  // const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
 
-  useEffect(() => {
-    const updateCountdowns = () => {
-      setDailyRewardTimeLeft(calculateTimeLeft(0));
-      setDailyCipherTimeLeft(calculateTimeLeft(19));
-      setDailyComboTimeLeft(calculateTimeLeft(12));
-    };
+  // useEffect(() => {
+  //   const updateCountdowns = () => {
+  //     setDailyRewardTimeLeft(calculateTimeLeft(0));
+  //     setDailyCipherTimeLeft(calculateTimeLeft(19));
+  //     setDailyComboTimeLeft(calculateTimeLeft(12));
+  //   };
 
-    updateCountdowns();
-    const interval = setInterval(updateCountdowns, 60000); // Update every minute
+  //   updateCountdowns();
+  //   const interval = setInterval(updateCountdowns, 60000); // Update every minute
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
