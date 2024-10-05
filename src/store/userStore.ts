@@ -30,7 +30,7 @@ interface UserActions {
 
 // Combined User Store Type
 type UserStore = UserState & UserActions;
-const {user} = useTelegram()
+const { user } = useTelegram()
 const id = user?.id
 // Persisted Zustand Store
 const useUserStore = create(
@@ -49,7 +49,7 @@ const useUserStore = create(
             // Action to update points
             updatePoints: (newPoints) => {
                 // const { points } = get();
-                get().saveProgress(); // Save after points update
+
                 set({ points: newPoints })
 
 
@@ -107,7 +107,7 @@ const useUserStore = create(
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            telegramId:telegramId,
+                            telegramId: telegramId,
                             points,
                             pointsPerClick,
                             energyBar,
@@ -125,13 +125,13 @@ const useUserStore = create(
             },
             // Start autosave: triggers periodic saves
             startAutoSave: () => {
+
+             
+                    get().saveProgress(); // Save after points update
+                    console.log('Auto-saving...');
               
-                    const intervalId = setInterval(() => {
-                        get().saveProgress(); // Save after points update
-                        console.log('Auto-saving...');
-                    }, 60000); // Save every 60 seconds
-                    set({ autoSaveIntervalId: intervalId });
-                
+                // set({ autoSaveIntervalId: intervalId });
+
             },
 
             // Stop autosave
