@@ -1,5 +1,5 @@
 import { dollarCoin } from "../images";
-import WebApp from "@twa-dev/sdk";
+
 
 interface EarnProps {
   // add props here
