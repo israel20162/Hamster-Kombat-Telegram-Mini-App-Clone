@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Define the User State Type
 interface UserState {
+    telegramId: string;
     points: number;
     profitPerHour: number;
     pointsPerClick: number;
@@ -20,6 +21,7 @@ interface UserActions {
     updateEnergyBar: (amount: number) => void;
     resetUser: () => void;
     setInitialState: (user: UserState) => void
+    saveProgress: () => Promise<void>;
 }
 
 // Combined User Store Type
@@ -28,7 +30,8 @@ type UserStore = UserState & UserActions;
 // Persisted Zustand Store
 const useUserStore = create(
     persist<UserStore>(
-        (set) => ({
+        (set, get) => ({
+            telegramId: '',
             points: 5000,           // Initial points
             profitPerHour: 10,     // Points generated automatically per hour
             pointsPerClick: 1,    // Points generated per click
@@ -36,9 +39,9 @@ const useUserStore = create(
             upgradeLevelClick: 1, // Initial level of points per click upgrade
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
-            setInitialState: (user) => { set(() => ({ points: user.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
+            setInitialState: (user) => { set(() => ({ telegramId: user?.telegramId, points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
             // Action to update points
-            updatePoints: (newPoints) => set((state) => ({ points: state.points + newPoints })),
+            updatePoints: (newPoints) => set(() => ({ points:  newPoints })),
 
             // Action to upgrade points per click
             upgradePointsPerClick: (cost) => set((state) => {
@@ -79,10 +82,38 @@ const useUserStore = create(
                 upgradeLevelEnergy: 1,
                 upgradeLevelProfit: 1,
             }),
+            // Function to save progress to backend
+            saveProgress: async () => {
+                const { points, pointsPerClick, energyBar, upgradeLevelClick } = get();
+                const userId = 'some-unique-user-id';
+
+                try {
+                    const response = await fetch('/api/save-progress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId,
+                            points,
+                            pointsPerClick,
+                            energyBar,
+                            upgradeLevelClick,
+                        }),
+                    });
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        console.error('Error saving progress');
+                    }
+                } catch (error) {
+                    console.error('Failed to save progress:', error);
+                }
+            },
         }),
         {
             name: 'user-store', // Unique name for storage (localStorage key)
-            storage: createJSONStorage(() => sessionStorage), // Define the storage medium (localStorage)
+            storage: createJSONStorage(() => localStorage), // Define the storage medium (localStorage)
         }
     )
 );

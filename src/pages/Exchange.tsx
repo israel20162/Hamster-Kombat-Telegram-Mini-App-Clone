@@ -6,6 +6,7 @@ import Info from "../icons/Info";
 import Settings from "../icons/Settings";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 // import calculateTimeLeft from "../utils/calculateTimeLeft";
+import useUserStore from "../store/userStore";
 interface Props {
   points: number;
   setPoints: React.Dispatch<React.SetStateAction<number>>;
@@ -69,7 +70,7 @@ const Exchange: React.FC<Props> = (props) => {
 
   //   return () => clearInterval(interval);
   // }, []);
-
+const { updatePoints } = useUserStore();
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -84,6 +85,7 @@ const Exchange: React.FC<Props> = (props) => {
 
    if (energy >= pointsToAdd) {
      setPoints(points + pointsToAdd);
+     updatePoints(points + pointsToAdd)
       setEnergy((prev: any) =>
         prev - pointsToAdd
       );
