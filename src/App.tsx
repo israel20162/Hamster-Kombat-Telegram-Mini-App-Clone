@@ -38,7 +38,7 @@ const App: React.FC = () => {
       clearInterval(set);
       //  stopAutoSave(); // Stop autosave when the component unmounts
     };
-  }, [startAutoSave, stopAutoSave]);
+  }, [set]);
 
   const pointsToAdd = pointsPerClick;
 
