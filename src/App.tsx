@@ -7,24 +7,28 @@ import Friends from "./pages/Friends";
 import Earn from "./pages/Earn";
 import { useTelegram } from "./hooks/useTelegram";
 import { createOrGetUser } from "./server/Api";
+import useUserStore from "./store/userStore";
 
 const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
-  const pointsToAdd = 11;
-  const [points, setPoints] = useState(22749365);
-  const profitPerHour = 126420;
   const { user, WebApp } = useTelegram();
-
+  const setUserData = useUserStore((state) => state.setInitialState);
+ 
   useEffect(() => {
     async function send() {
-      await createOrGetUser(user?.id);
+      const response = await createOrGetUser(user?.id);
+      const data = await response?.json();
+     // setUserData(data);
     }
-
     send();
     WebApp.ready();
   }, []);
 
- 
+   const { pointsPerClick } = useUserStore();
+
+   const pointsToAdd = pointsPerClick;
+   const [points, setPoints] = useState(useUserStore((state) => state.points));
+   const profitPerHour = useUserStore((state) => state.profitPerHour);
 
   return (
     <Switch fallback={<p>A fallback</p>}>
