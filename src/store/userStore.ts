@@ -97,7 +97,7 @@ const useUserStore = create(
             // Function to save progress to backend
             saveProgress: async () => {
                 const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick } = get();
-console.log(telegramId);
+
 
 
                 try {
@@ -125,13 +125,13 @@ console.log(telegramId);
             },
             // Start autosave: triggers periodic saves
             startAutoSave: () => {
-                if (!get().autoSaveIntervalId) {
+              
                     const intervalId = setInterval(() => {
                         get().saveProgress(); // Save after points update
                         console.log('Auto-saving...');
-                    }, 6000); // Save every 60 seconds
+                    }, 60000); // Save every 60 seconds
                     set({ autoSaveIntervalId: intervalId });
-                }
+                
             },
 
             // Stop autosave
