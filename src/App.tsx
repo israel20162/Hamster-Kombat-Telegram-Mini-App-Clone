@@ -27,17 +27,16 @@ const App: React.FC = () => {
   }, []);
   const [points, setPoints] = useState(useUserStore((state) => state.points));
 
-  
   const set = setInterval(() => {
     startAutoSave();
   }, 60000);
-  // Start autosave when the component mounts 
+  // Start autosave when the component mounts
   useEffect(() => {
-   // startAutoSave();
+    // startAutoSave();
 
     return () => {
       clearInterval(set);
-    //  stopAutoSave(); // Stop autosave when the component unmounts
+      //  stopAutoSave(); // Stop autosave when the component unmounts
     };
   }, [startAutoSave, stopAutoSave]);
 
