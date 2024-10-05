@@ -49,7 +49,7 @@ const useUserStore = create(
             // Action to update points
             updatePoints: (newPoints) => {
                 // const { points } = get();
-
+                get().saveProgress(); // Save after points update
                 set({ points: newPoints })
 
 
