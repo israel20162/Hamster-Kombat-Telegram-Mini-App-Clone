@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
-  const [points, setPoints] = useState(useUserStore((state) => state.points));
+ 
   const { pointsPerClick, startAutoSave, stopAutoSave } = useUserStore();
   useEffect(() => {
     async function send() {
@@ -25,6 +25,7 @@ const App: React.FC = () => {
     send();
     WebApp.ready();
   }, []);
+   const [points, setPoints] = useState(useUserStore((state) => state.points));
   // Start autosave when the component mounts
   useEffect(() => {
     startAutoSave();
