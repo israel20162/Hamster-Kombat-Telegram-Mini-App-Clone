@@ -18,10 +18,8 @@ const App: React.FC = () => {
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
-      const data = await response?.json();
-    
-      
-      setUserData(data.user);
+      const data = await response?.json(); 
+     setUserData(data.user);
       setPoints(data.user.points);
     }
     send();

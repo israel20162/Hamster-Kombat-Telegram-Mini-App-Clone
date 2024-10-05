@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import Hamster from "../icons/Hamster";
-import {
-  binanceLogo,
-  dollarCoin,
-  mainCharacter,
-} from "../images";
+import { binanceLogo, dollarCoin, mainCharacter } from "../images";
 import Info from "../icons/Info";
 import Settings from "../icons/Settings";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
@@ -54,7 +50,7 @@ const Exchange: React.FC<Props> = (props) => {
   const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>(
     []
   );
-  const [energy, setEnergy] = useState<number>(1000);
+  const [energy, setEnergy] = useState<number | any>(1000);
   const [totalEnergy] = useState<number>(1000);
 
   // const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
@@ -86,9 +82,14 @@ const Exchange: React.FC<Props> = (props) => {
       card.style.transform = "";
     }, 100);
 
-    setPoints(points + pointsToAdd);
-    setEnergy((prev) => (prev - pointsToAdd <= 0 ? 0 : prev - pointsToAdd));
-    setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
+   if (energy >= pointsToAdd) {
+     setPoints(points + pointsToAdd);
+      setEnergy((prev: any) =>
+        prev - pointsToAdd
+      );
+      setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
+   }
+   
   };
 
   const handleAnimationEnd = (id: number) => {
@@ -120,7 +121,7 @@ const Exchange: React.FC<Props> = (props) => {
     const pointsPerSecond = Math.floor(profitPerHour / 3600);
     const interval = setInterval(() => {
       setPoints((prevPoints) => prevPoints + pointsPerSecond);
-      setEnergy((prev) => (energy < totalEnergy ? prev + 1 : totalEnergy));
+      setEnergy((prev:any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
     }, 1000);
     return () => clearInterval(interval);
   }, [profitPerHour, energy]);
