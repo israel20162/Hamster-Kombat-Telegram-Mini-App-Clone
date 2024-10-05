@@ -29,7 +29,8 @@ const App: React.FC = () => {
    const { pointsPerClick } = useUserStore();
 
    const pointsToAdd = pointsPerClick;
-   const [points, setPoints] = useState(useUserStore((state) => state.points));
+   const [points, setPoints] = useState(0);
+   setPoints(useUserStore((state) => state.points));
    const profitPerHour = useUserStore((state) => state.profitPerHour);
 
   return (
