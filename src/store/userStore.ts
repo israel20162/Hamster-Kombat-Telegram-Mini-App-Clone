@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { API_URL } from '../server/variables';
 import { useTelegram } from '../hooks/useTelegram';
+import WebApp from '@twa-dev/sdk';
 // Define the User State Type
 interface UserState {
     telegramId: string;
@@ -129,7 +130,7 @@ const useUserStore = create(
              
                   await  get().saveProgress(); // Save after points update
                     console.log('Auto-saving...');
-                    alert('hi')
+                WebApp.showAlert("Hello world!");
               
                 // set({ autoSaveIntervalId: intervalId });
 

@@ -7,7 +7,7 @@ interface EarnProps {
 
 const Earn: React.FC<EarnProps> = () => {
   
-WebApp.showAlert("Hello world!");
+
   return (
     <>
       <div className="h-screen">
