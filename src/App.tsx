@@ -18,7 +18,7 @@ const App: React.FC = () => {
     async function send() {
       const response = await createOrGetUser(user?.id);
       const data = await response?.json();
-     // setUserData(data);
+      setUserData(data);
     }
     send();
     WebApp.ready();
