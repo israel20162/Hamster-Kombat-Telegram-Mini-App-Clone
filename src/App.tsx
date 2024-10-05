@@ -16,9 +16,11 @@ const App: React.FC = () => {
  
   useEffect(() => {
     async function send() {
-      const response = await createOrGetUser(user?.id);
+      const response = await createOrGetUser(75863087786);
       const data = await response?.json();
-      setUserData(data);
+    
+      
+      setUserData(data.user);
     }
     send();
     WebApp.ready();
