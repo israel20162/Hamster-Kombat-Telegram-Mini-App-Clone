@@ -36,7 +36,7 @@ const useUserStore = create(
             upgradeLevelClick: 1, // Initial level of points per click upgrade
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
-            setInitialState: (user) => { set(() => ({ points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
+            setInitialState: (user) => { set(() => ({ points: user.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
             // Action to update points
             updatePoints: (newPoints) => set((state) => ({ points: state.points + newPoints })),
 
