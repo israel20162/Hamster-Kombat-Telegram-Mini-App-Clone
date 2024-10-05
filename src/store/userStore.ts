@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { API_URL } from '../server/variables';
-
+import { useTelegram } from '../hooks/useTelegram';
 // Define the User State Type
 interface UserState {
     telegramId: string;
@@ -30,7 +30,8 @@ interface UserActions {
 
 // Combined User Store Type
 type UserStore = UserState & UserActions;
-
+const {user} = useTelegram()
+const id = user?.id
 // Persisted Zustand Store
 const useUserStore = create(
     persist<UserStore>(
@@ -44,7 +45,7 @@ const useUserStore = create(
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
-            setInitialState: (user) => { set(() => ({ telegramId: user.telegramId, points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
+            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
             // Action to update points
             updatePoints: (newPoints) => {
                 // const { points } = get();
@@ -96,6 +97,7 @@ const useUserStore = create(
             // Function to save progress to backend
             saveProgress: async () => {
                 const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick } = get();
+console.log(telegramId);
 
 
                 try {
@@ -105,7 +107,7 @@ const useUserStore = create(
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            telegramId,
+                            telegramId:telegramId,
                             points,
                             pointsPerClick,
                             energyBar,
