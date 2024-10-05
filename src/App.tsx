@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
   const [points, setPoints] = useState(useUserStore((state) => state.points));
-
+  const { pointsPerClick, startAutoSave, stopAutoSave } = useUserStore();
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
@@ -25,8 +25,16 @@ const App: React.FC = () => {
     send();
     WebApp.ready();
   }, []);
+  // Start autosave when the component mounts
+  useEffect(() => {
+    startAutoSave();
 
-  const { pointsPerClick } = useUserStore();
+    return () => {
+      stopAutoSave(); // Stop autosave when the component unmounts
+    };
+  }, [startAutoSave, stopAutoSave]);
+
+
 
   const pointsToAdd = pointsPerClick;
 
@@ -74,15 +82,7 @@ const App: React.FC = () => {
     </Switch>
   );
 
-  switch (page) {
-    case "Exchange":
 
-    case "Mine":
-      return <></>;
-
-    default:
-      break;
-  }
 };
 
 export default App;

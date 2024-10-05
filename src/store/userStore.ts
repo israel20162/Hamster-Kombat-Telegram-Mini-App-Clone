@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { API_URL } from '../server/variables';
 
 // Define the User State Type
 interface UserState {
@@ -11,6 +12,9 @@ interface UserState {
     upgradeLevelClick: number;
     upgradeLevelEnergy: number;
     upgradeLevelProfit: number;
+    autoSaveIntervalId: number | null;  // Added autoSaveIntervalId here
+    startAutoSave: () => void;  // Function to start the autosave timer
+    stopAutoSave: () => void;   // Function to stop the autosave timer
 }
 
 // Define the User Actions Type
@@ -39,9 +43,16 @@ const useUserStore = create(
             upgradeLevelClick: 1, // Initial level of points per click upgrade
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
+            autoSaveIntervalId: null, // Store the interval ID to stop later if needed
             setInitialState: (user) => { set(() => ({ telegramId: user?.telegramId, points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
             // Action to update points
-            updatePoints: (newPoints) => set(() => ({ points:  newPoints })),
+            updatePoints: (newPoints) => {
+                // const { points } = get();
+
+                set({ points: newPoints })
+
+
+            },
 
             // Action to upgrade points per click
             upgradePointsPerClick: (cost) => set((state) => {
@@ -84,17 +95,17 @@ const useUserStore = create(
             }),
             // Function to save progress to backend
             saveProgress: async () => {
-                const { points, pointsPerClick, energyBar, upgradeLevelClick } = get();
-                const userId = 'some-unique-user-id';
+                const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick } = get();
+
 
                 try {
-                    const response = await fetch('/api/save-progress', {
+                    const response = await fetch(`${API_URL}/save-progress`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            userId,
+                            telegramId:telegramId,
                             points,
                             pointsPerClick,
                             energyBar,
@@ -108,6 +119,25 @@ const useUserStore = create(
                     }
                 } catch (error) {
                     console.error('Failed to save progress:', error);
+                }
+            },
+            // Start autosave: triggers periodic saves
+            startAutoSave: () => {
+                if (!get().autoSaveIntervalId) {
+                    const intervalId = setInterval(() => {
+                        get().saveProgress(); // Save after points update
+                        console.log('Auto-saving...');
+                    }, 60000 * 2); // Save every 60 seconds
+                    set({ autoSaveIntervalId: intervalId });
+                }
+            },
+
+            // Stop autosave
+            stopAutoSave: () => {
+                const intervalId = get().autoSaveIntervalId;
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    set({ autoSaveIntervalId: null });
                 }
             },
         }),
