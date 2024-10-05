@@ -22,7 +22,7 @@ const App: React.FC = () => {
     
       
       setUserData(data.user);
-      setPoints(useUserStore((state) => state.points));
+      setPoints(data.user.points);
     }
     send();
     WebApp.ready();
