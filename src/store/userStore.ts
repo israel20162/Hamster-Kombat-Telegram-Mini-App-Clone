@@ -124,10 +124,10 @@ const useUserStore = create(
                 }
             },
             // Start autosave: triggers periodic saves
-            startAutoSave: () => {
+            startAutoSave: async() => {
 
              
-                    get().saveProgress(); // Save after points update
+                  await  get().saveProgress(); // Save after points update
                     console.log('Auto-saving...');
                     alert('hi')
               

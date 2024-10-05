@@ -33,11 +33,11 @@ const App: React.FC = () => {
   }, 60000);
   // Start autosave when the component mounts 
   useEffect(() => {
-    startAutoSave();
+   // startAutoSave();
 
     return () => {
       clearInterval(set);
-      stopAutoSave(); // Stop autosave when the component unmounts
+    //  stopAutoSave(); // Stop autosave when the component unmounts
     };
   }, [startAutoSave, stopAutoSave]);
 
