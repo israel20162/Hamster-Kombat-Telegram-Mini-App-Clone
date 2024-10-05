@@ -13,7 +13,8 @@ const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
- 
+   const [points, setPoints] = useState(0);
+  
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
@@ -21,6 +22,7 @@ const App: React.FC = () => {
     
       
       setUserData(data.user);
+      setPoints(useUserStore((state) => state.points));
     }
     send();
     WebApp.ready();
@@ -29,8 +31,7 @@ const App: React.FC = () => {
    const { pointsPerClick } = useUserStore();
 
    const pointsToAdd = pointsPerClick;
-   const [points, setPoints] = useState(0);
-   setPoints(useUserStore((state) => state.points));
+ 
    const profitPerHour = useUserStore((state) => state.profitPerHour);
 
   return (
