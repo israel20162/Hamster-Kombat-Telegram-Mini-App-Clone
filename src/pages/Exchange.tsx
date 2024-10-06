@@ -70,7 +70,7 @@ const Exchange: React.FC<Props> = (props) => {
 
   //   return () => clearInterval(interval);
   // }, []);
-const { updatePoints } = useUserStore();
+  const { updatePoints } = useUserStore();
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -83,15 +83,12 @@ const { updatePoints } = useUserStore();
       card.style.transform = "";
     }, 100);
 
-   if (energy >= pointsToAdd) {
-     setPoints(points + pointsToAdd);
-     updatePoints(points + pointsToAdd)
-      setEnergy((prev: any) =>
-        prev - pointsToAdd
-      );
+    if (energy >= pointsToAdd) {
+      setPoints(points + pointsToAdd);
+      updatePoints(points + pointsToAdd);
+      setEnergy((prev: any) => prev - pointsToAdd);
       setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
-   }
-   
+    }
   };
 
   const handleAnimationEnd = (id: number) => {
@@ -121,13 +118,14 @@ const { updatePoints } = useUserStore();
 
   useEffect(() => {
     const pointsPerSecond = Math.floor(profitPerHour / 3600);
+
     const interval = setInterval(() => {
       setPoints((prevPoints) => prevPoints + pointsPerSecond);
-        updatePoints(points);
-      setEnergy((prev:any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
+      updatePoints(points + pointsPerSecond);
+      setEnergy((prev: any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
     }, 1000);
     return () => clearInterval(interval);
-  }, [profitPerHour, energy]);
+  }, [profitPerHour, energy, points]);
 
   return (
     <div className="bg-black flex justify-center h-screen overflow-scroll">
