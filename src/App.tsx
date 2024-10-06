@@ -13,19 +13,19 @@ const App: React.FC = () => {
   const [page, setPage] = useState("Exchange");
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
-
+  const [points, setPoints] = useState(useUserStore((state) => state.points));
   const { pointsPerClick, startAutoSave } = useUserStore();
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
       const data = await response?.json();
       setUserData(data.user);
-      setPoints(data.user.points);
+   //   setPoints(data.user.points);
     }
     send();
     WebApp.ready();
   }, []);
-  const [points, setPoints] = useState(useUserStore((state) => state.points));
+
 
   const set = setInterval(() => {
     startAutoSave();
@@ -38,7 +38,7 @@ const App: React.FC = () => {
       clearInterval(set);
       //  stopAutoSave(); // Stop autosave when the component unmounts
     };
-  }, [set]);
+  }, []);
 
   const pointsToAdd = pointsPerClick;
 
