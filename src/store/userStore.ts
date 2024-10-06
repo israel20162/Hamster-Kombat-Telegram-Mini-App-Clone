@@ -46,7 +46,7 @@ const useUserStore = create(
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
-            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), points: user?.points, profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
+            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
             // Action to update points
             updatePoints: (newPoints) => {
                 // const { points } = get();
@@ -125,11 +125,10 @@ const useUserStore = create(
                 }
             },
             // Start autosave: triggers periodic saves
-            startAutoSave: async() => {
-
-             
-                  await  get().saveProgress(); // Save after points update
-                    console.log('Auto-saving...');
+            startAutoSave: async() => {           
+                await  get().saveProgress(); // Save after points update
+              
+                console.log('Auto-saving...');
                 WebApp.showAlert("Hello world!");
               
                 // set({ autoSaveIntervalId: intervalId });
@@ -146,7 +145,7 @@ const useUserStore = create(
             },
         }),
         {
-            name: 'user-store', // Unique name for storage (localStorage key)
+            name: `user-store-${id}`, // Unique name for storage (localStorage key)
             storage: createJSONStorage(() => localStorage), // Define the storage medium (localStorage)
         }
     )

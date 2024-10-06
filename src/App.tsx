@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
 
-  const { pointsPerClick, startAutoSave, stopAutoSave } = useUserStore();
+  const { pointsPerClick, startAutoSave } = useUserStore();
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
