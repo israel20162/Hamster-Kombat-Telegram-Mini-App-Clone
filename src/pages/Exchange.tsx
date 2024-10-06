@@ -123,7 +123,7 @@ const { updatePoints } = useUserStore();
     const pointsPerSecond = Math.floor(profitPerHour / 3600);
     const interval = setInterval(() => {
       setPoints((prevPoints) => prevPoints + pointsPerSecond);
-        updatePoints(points + pointsToAdd);
+        updatePoints(points);
       setEnergy((prev:any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
     }, 1000);
     return () => clearInterval(interval);
