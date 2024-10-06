@@ -20,22 +20,21 @@ const App: React.FC = () => {
       const response = await createOrGetUser(user?.id);
       const data = await response?.json();
       setUserData(data.user);
-   //   setPoints(data.user.points);
+      //   setPoints(data.user.points);
     }
     send();
     WebApp.ready();
   }, []);
 
-
-  const set = setInterval(() => {
-    startAutoSave();
-  }, 60000);
   // Start autosave when the component mounts
   useEffect(() => {
     // startAutoSave();
-
+    var set;
+    clearInterval(set);
+    set = setInterval(() => {
+      startAutoSave();
+    }, 60000);
     return () => {
-      clearInterval(set);
       //  stopAutoSave(); // Stop autosave when the component unmounts
     };
   }, []);
