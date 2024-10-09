@@ -1,8 +1,11 @@
+// import React, { createContext, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { API_URL } from '../server/variables';
 import { useTelegram } from '../hooks/useTelegram';
 import WebApp from '@twa-dev/sdk';
+
+
 // Define the User State Type
 interface UserState {
     telegramId: string;
@@ -33,6 +36,9 @@ interface UserActions {
 type UserStore = UserState & UserActions;
 const { user } = useTelegram()
 const id = user?.id
+
+
+
 // Persisted Zustand Store
 const useUserStore = create(
     persist<UserStore>(
@@ -125,12 +131,12 @@ const useUserStore = create(
                 }
             },
             // Start autosave: triggers periodic saves
-            startAutoSave: async() => {           
-                await  get().saveProgress(); // Save after points update
-              
+            startAutoSave: async () => {
+                await get().saveProgress(); // Save after points update
+
                 console.log('Auto-saving...');
                 WebApp.showAlert("Hello world!");
-              
+
                 // set({ autoSaveIntervalId: intervalId });
 
             },

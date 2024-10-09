@@ -21,7 +21,7 @@ const Footer: React.FC<FooterProps> = (props) => {
           <button className="bg-blue-500 p-4 w-3/12 rounded-md">copy</button>
         </div>
       </Show>
-      <div className="  max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-50 rounded-3x text-xs">
+      <div className="fixed bottom-0 left-0 w-full    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
         <div
           onClick={() => props.setpage("Exchange")}
           className={`text-center text-[#85827d] w-1/5 p-2 m-1 ${

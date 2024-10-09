@@ -19,7 +19,7 @@ import Legal from "./Mine/Legal";
 import Specials from "./Mine/Specials";
 import CardModal from "../components/cardModal";
 import { CardTypes } from "../utils/types";
-
+import useUserStore from "../store/userStore";
 
 interface Props {
   points: number;
@@ -30,7 +30,8 @@ interface Props {
 }
 
 const Mine: React.FC<Props> = (props) => {
-  const points = props.points;
+  //  const [points, setPoints] = useState(useUserStore((state) => state.points));
+  const { updatePoints ,points} = useUserStore();
   const profitPerHour = props.profitPerHour;
   const pointsToAdd = props.pointsToAdd;
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
@@ -45,15 +46,21 @@ const Mine: React.FC<Props> = (props) => {
     price: 0,
   });
   useEffect(() => {
+  
     const updateCountdowns = () => {
+        const pointsPerSecond = Math.floor(70000 / 3600);
+      // const pointsPerSecond = Math.floor(profitPerHour / 3600);
+     
+      updatePoints(points + pointsPerSecond);
+      //  setPoints((prev) => prev + pointsPerSecond);
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
     };
 
-    updateCountdowns();
+     updateCountdowns();
     const interval = setInterval(updateCountdowns, 1000); // Update every minute
 
     return () => clearInterval(interval);
-  }, []);
+  }, [dailyComboTimeLeft]);
 
   const MarketCards = [
     {
@@ -193,9 +200,7 @@ const Mine: React.FC<Props> = (props) => {
                       alt="Dollar Coin"
                       className="w-10 h-10"
                     />
-                    <p className="text-4xl text-white">
-                      {points.toLocaleString()}
-                    </p>
+                    <p className="text-4xl text-white">{points}</p>
                   </div>
                 </div>
                 <p className="text-[12px] w-full px-8 font-medium text-end text-gray-500 mt-2">

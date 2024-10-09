@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../App.css";
 import Hamster from "../icons/Hamster";
 import { binanceLogo, dollarCoin, mainCharacter } from "../images";
@@ -7,6 +7,8 @@ import Settings from "../icons/Settings";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
 // import calculateTimeLeft from "../utils/calculateTimeLeft";
 import useUserStore from "../store/userStore";
+import { AppContext, AppContextTypes } from "../context/appContext";
+
 interface Props {
   points: number;
   setPoints: React.Dispatch<React.SetStateAction<number>>;
@@ -16,6 +18,7 @@ interface Props {
 }
 
 const Exchange: React.FC<Props> = (props) => {
+  const { setPage } = useContext(AppContext) as AppContextTypes;
   const levelNames = [
     "Bronze", // From 0 to 4999 coins
     "Silver", // From 5000 coins to 24,999 coins
@@ -41,8 +44,9 @@ const Exchange: React.FC<Props> = (props) => {
     100000000, // GrandMaster
     1000000000, // Lord
   ];
-  const points = props.points;
-  const setPoints = props.setPoints;
+  // const [points, setPoints] = useState(useUserStore((state) => state.points));
+  const { updatePoints, energyBar ,points} = useUserStore();
+  // const setPoints = props.setPoints;
   const pointsToAdd = props.pointsToAdd;
   const profitPerHour = props.profitPerHour;
 
@@ -51,8 +55,8 @@ const Exchange: React.FC<Props> = (props) => {
   const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>(
     []
   );
-  const [energy, setEnergy] = useState<number | any>(1000);
-  const [totalEnergy] = useState<number>(1000);
+  const [energy, setEnergy] = useState<number | any>(energyBar);
+  const totalEnergy = energyBar;
 
   // const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
   // const [dailyCipherTimeLeft, setDailyCipherTimeLeft] = useState("");
@@ -70,7 +74,7 @@ const Exchange: React.FC<Props> = (props) => {
 
   //   return () => clearInterval(interval);
   // }, []);
-  const { updatePoints } = useUserStore();
+
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -84,7 +88,7 @@ const Exchange: React.FC<Props> = (props) => {
     }, 100);
 
     if (energy >= pointsToAdd) {
-      setPoints(points + pointsToAdd);
+      // setPoints(points + pointsToAdd);
       updatePoints(points + pointsToAdd);
       setEnergy((prev: any) => prev - pointsToAdd);
       setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
@@ -115,20 +119,20 @@ const Exchange: React.FC<Props> = (props) => {
       setLevelIndex(levelIndex - 1);
     }
   }, [points, levelIndex, levelMinPoints, levelNames.length]);
-
   useEffect(() => {
-    const pointsPerSecond = Math.floor(profitPerHour / 3600);
- updatePoints(points + pointsPerSecond);
+    //  const pointsPerSecond = Math.floor(profitPerHour / 3600);
+    const pointsPerSecond = Math.floor(70000 / 3600);
     const interval = setInterval(() => {
-      setPoints((prevPoints) => prevPoints + pointsPerSecond);
-     
+       updatePoints(points + pointsPerSecond);
+      // setPoints((prevPoints) => prevPoints + pointsPerSecond);
+
       setEnergy((prev: any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
     }, 1000);
     return () => clearInterval(interval);
   }, [profitPerHour, energy, points]);
 
   return (
-    <div className="bg-black flex justify-center h-screen overflow-scroll">
+    <div className="bg-black flex justify-center h-screen overflow-scroll min-h-screen mb-[10vh]">
       <div className=" bg-black text-white  font-bold flex flex-col max-w-xl w-screen ">
         <div className="px-4 z-10">
           <div className="flex items-center space-x-2 pt-4">
@@ -256,11 +260,18 @@ const Exchange: React.FC<Props> = (props) => {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between   pt-10  h-full px-4 bg-[#1d2025]">
+            <div className="flex justify-between flex-row   py-10  h-full px-4 bg-[#1d2025]">
               <div className="font-bold text-xl">
                 {energy} / {totalEnergy}
               </div>
-              <span className="text-gray-100 text-lg">Boosts</span>
+              <span
+                onClick={() => {
+                  setPage("Boosts");
+                }}
+                className="text-gray-100 text-lg"
+              >
+                Boosts
+              </span>
             </div>
           </div>
         </div>

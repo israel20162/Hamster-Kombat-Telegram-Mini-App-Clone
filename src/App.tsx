@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Exchange from "./pages/Exchange";
 import Footer from "./components/footer";
 import Mine from "./pages/Mine";
+import Boosts from "./pages/Boosts";
 import { Switch, Match } from "./utils/reactComponents";
 import Friends from "./pages/Friends";
 import Earn from "./pages/Earn";
 import { useTelegram } from "./hooks/useTelegram";
 import { createOrGetUser } from "./server/Api";
 import useUserStore from "./store/userStore";
+import { AppContext } from "./context/appContext";
+import { AppContextTypes } from "./context/appContext";
 
 const App: React.FC = () => {
-  const [page, setPage] = useState("Exchange");
+  const { page, setPage } = useContext(AppContext) as AppContextTypes;
   const { user, WebApp } = useTelegram();
   const setUserData = useUserStore((state) => state.setInitialState);
   const [points, setPoints] = useState(useUserStore((state) => state.points));
-  const { pointsPerClick, startAutoSave } = useUserStore();
+  const {
+    pointsPerClick,
+    startAutoSave,
+    profitPerHour,
+  } = useUserStore();
+
   useEffect(() => {
     async function send() {
       const response = await createOrGetUser(user?.id);
@@ -40,9 +48,8 @@ const App: React.FC = () => {
   }, []);
 
   const pointsToAdd = pointsPerClick;
-
-  const profitPerHour = useUserStore((state) => state.profitPerHour);
-
+ 
+ 
   return (
     <Switch fallback={<p>A fallback</p>}>
       <Match when={page == "Exchange"}>
@@ -53,6 +60,7 @@ const App: React.FC = () => {
             setPoints={setPoints}
             profitPerHour={profitPerHour}
             user={user}
+          
           />
 
           <Footer setpage={setPage} page={page} />
@@ -79,6 +87,12 @@ const App: React.FC = () => {
       <Match when={page == "Earn"}>
         <div className="bg-black relative ">
           <Earn />
+          <Footer setpage={setPage} page={page} />
+        </div>
+      </Match>
+      <Match when={page == "Boosts"}>
+        <div className="bg-black relative ">
+          <Boosts points={points}/>
           <Footer setpage={setPage} page={page} />
         </div>
       </Match>
