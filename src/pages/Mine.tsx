@@ -48,8 +48,8 @@ const Mine: React.FC<Props> = (props) => {
   useEffect(() => {
   
     const updateCountdowns = () => {
-        const pointsPerSecond = Math.floor(70000 / 3600);
-      // const pointsPerSecond = Math.floor(profitPerHour / 3600);
+        // const pointsPerSecond = Math.floor(70000 / 3600);
+      const pointsPerSecond = Math.floor(profitPerHour / 3600);
      
       updatePoints(points + pointsPerSecond);
       //  setPoints((prev) => prev + pointsPerSecond);

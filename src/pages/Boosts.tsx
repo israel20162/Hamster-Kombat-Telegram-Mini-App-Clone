@@ -2,6 +2,8 @@ import React from "react";
 import Fire from "../icons/Fire";
 import Lightning from "../icons/Lightning";
 import Hand from "../icons/Hand";
+import Battery from "../icons/Battery";
+import Recharge from "../icons/Recharge";
 interface BoostsProps {
   points: number | string;
 }
@@ -60,7 +62,7 @@ const Boosts: React.FC<BoostsProps> = (props) => {
         </div>
         <div className="mt-4 bg-gray-900/30 py-3 px-4 rounded-lg flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <i className="fas fa-battery-half text-blue-400" />
+          <Battery/>
             <div>
               <p>Energy Limit</p>
               <p className="text-sm text-gray-300">200 | 1 level</p>
@@ -70,7 +72,7 @@ const Boosts: React.FC<BoostsProps> = (props) => {
         </div>
         <div className="mt-4 bg-gray-900/30 py-3 px-4 rounded-lg flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <i className="fas fa-bolt text-yellow-400" />
+           <Recharge className="h-6 w-6" size={44}/>
             <div>
               <p>Recharging Speed</p>
               <p className="text-sm text-gray-300">200 | 1 level</p>

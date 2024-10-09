@@ -120,8 +120,8 @@ const Exchange: React.FC<Props> = (props) => {
     }
   }, [points, levelIndex, levelMinPoints, levelNames.length]);
   useEffect(() => {
-    //  const pointsPerSecond = Math.floor(profitPerHour / 3600);
-    const pointsPerSecond = Math.floor(70000 / 3600);
+     const pointsPerSecond = Math.floor(profitPerHour / 3600);
+    // const pointsPerSecond = Math.floor(70000 / 3600);
     const interval = setInterval(() => {
        updatePoints(points + pointsPerSecond);
       // setPoints((prevPoints) => prevPoints + pointsPerSecond);
