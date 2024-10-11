@@ -43,7 +43,7 @@ interface UserActions {
 }
 
 // Combined User Store Type
-type UserStore = UserState & UserActions;
+type UserStore = UserState & UserActions; 
 const { user } = useTelegram()
 const id = user?.id
 
