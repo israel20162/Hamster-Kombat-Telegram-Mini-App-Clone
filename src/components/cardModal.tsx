@@ -49,7 +49,7 @@ const CardModal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         className={`fixed inset-x-0 bottom-0 z-50 w-full max-h-1/2   bg-black text-white p-6 rounded-t-[46px] shadow-lg transform transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
-        }`}
+        }`} 
       >
         <div className="flex flex-col justify-center text-center gap-1">
           {isBoost ? (
