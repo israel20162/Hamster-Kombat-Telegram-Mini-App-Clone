@@ -6,6 +6,7 @@ import { CardTypes } from "../utils/types";
 
 interface ModalProps {
   isOpen: boolean;
+  setIsModalOpen?: () => void;
   isBoost: boolean;
   onClose: () => void;
   cardDetails: CardTypes;
@@ -15,6 +16,7 @@ const CardModal: React.FC<ModalProps> = ({
   onClose,
   cardDetails,
   isBoost,
+  setIsModalOpen,
 }) => {
   // Prevent background scrolling when the modal is open
   useEffect(() => {
@@ -32,6 +34,7 @@ const CardModal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
   var imgUrl = typeof cardDetails.image == "string" ? cardDetails.image : "";
+
   return (
     <>
       {/* Backdrop */}
@@ -40,7 +43,7 @@ const CardModal: React.FC<ModalProps> = ({
           className={`fixed inset-0 z-40 bg-gradient-to-b from-gray-700 to-orange-500 backdrop-blur-sm transition-opacity duration-100 ease-in-out ${
             isOpen ? "opacity-50" : "opacity-0"
           }`}
-          onClick={onClose}
+          onClick={setIsModalOpen}
         ></div>
       )}
 
@@ -49,7 +52,7 @@ const CardModal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         className={`fixed inset-x-0 bottom-0 z-50 w-full max-h-1/2   bg-black text-white p-6 rounded-t-[46px] shadow-lg transform transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
-        }`} 
+        }`}
       >
         <div className="flex flex-col justify-center text-center gap-1">
           {isBoost ? (

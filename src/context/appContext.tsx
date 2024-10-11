@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useContext } from "react";
 
 export type AppContextTypes = {
   page: string;
@@ -11,6 +11,7 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [page, setPage] = useState("Exchange");
+ 
 
   return (
     <AppContext.Provider value={{ page: page, setPage: setPage }}>
@@ -18,5 +19,11 @@ const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     </AppContext.Provider>
   );
 };
+ export const usePage = () => {
+   const context = useContext(AppContext);
+   if (!context) throw new Error("usePage must be used within a PageProvider");
+   return context;
+ };
+
 
 export default AppContextProvider;

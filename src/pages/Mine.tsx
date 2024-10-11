@@ -352,6 +352,9 @@ const Mine: React.FC<Props> = (props) => {
       <CardModal
         isOpen={isModalOpen}
         isBoost={false}
+        setIsModalOpen={() => {
+          setIsModalOpen((prev) => !prev);
+        }}
         onClose={() => {
           setIsModalOpen((prev) => !prev);
         }}

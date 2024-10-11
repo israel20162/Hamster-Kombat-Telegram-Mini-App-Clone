@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Fire from "../icons/Fire";
 import Lightning from "../icons/Lightning";
 import Hand from "../icons/Hand";
@@ -10,6 +10,8 @@ import CardModal from "../components/cardModal";
 import { CardTypes } from "../utils/types";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import calculateTimeLeft from "../utils/calculateTimeLeft";
+import { usePage } from "../context/appContext";
 interface BoostsProps {
   points: number | string;
 }
@@ -24,6 +26,7 @@ const Boosts: React.FC<BoostsProps> = () => {
     price: 0,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
   const [stat, setStat] = useState("");
   const {
     points,
@@ -32,8 +35,13 @@ const Boosts: React.FC<BoostsProps> = () => {
     getUpgradeCost,
     upgradeLevelEnergy,
     upgradeLevelRecharge,
+    currentEnergy,
+    rechargeSpeed,
+    energyBar,
+    updateEnergy,
+    dailyBoosterUses,
   } = useUserStore();
-
+  const { setPage } = usePage();
   const Boosts = [
     {
       title: "Multitap",
@@ -61,34 +69,71 @@ const Boosts: React.FC<BoostsProps> = () => {
     },
   ];
 
+  const DailyBoosts = [
+    {
+      title: "Tapping Boost",
+      description: "Double points per click for 30 seconds",
+      image: Fire,
+      profitPerHour: 0,
+      level: dailyBoosterUses.tappingBoost,
+      price: 1,
+    },
+    {
+      title: "Full Tank",
+      description: "Energy is set to full",
+      image: Lightning,
+      profitPerHour: 0,
+      level: dailyBoosterUses.fullEnergy,
+      price: 1,
+    },
+  ];
+
   const handleUpgrade = async (cost: number, stat: string) => {
-    const resolveAfter3Sec = new Promise(async (resolve) => {
-      setTimeout(() => resolve(upgradeStats(cost, stat)), 3000);
+    const resolveAfter2Sec = new Promise(async (resolve) => {
+      setTimeout(() => resolve(upgradeStats(cost, stat)), 1000);
     });
-    await toast.promise(
-      resolveAfter3Sec,
-      {
-        pending: "Processing your upgrade...",
-        success: "Upgrade successful! 🎉",
-        error: "Not enough points to upgrade!",
-      },
-      {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Slide,
-      }
-    ).finally(()=>{
-       setIsModalOpen((prev) => !prev);
-    });
-   
+    await toast
+      .promise(
+        resolveAfter2Sec,
+        {
+          pending: "Processing your upgrade...",
+          success: "Upgrade successful! 🎉",
+          error: "Not enough points to upgrade!",
+        },
+        {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        }
+      )
+      .finally(() => {
+        setIsModalOpen((prev) => !prev);
+        setPage('Exchange')
+      });
   };
-  
+
+  useEffect(() => {
+    const updateCountdowns = () => {
+      updateEnergy(
+        currentEnergy < energyBar
+          ? currentEnergy + rechargeSpeed
+          : currentEnergy
+      );
+      //  setPoints((prev) => prev + pointsPerSecond);
+      setDailyComboTimeLeft(calculateTimeLeft(12, true));
+    };
+
+    updateCountdowns();
+    const interval = setInterval(updateCountdowns, 1000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [dailyComboTimeLeft]);
   return (
     <div className="overflow-auto text-white font-sans">
       <header className="flex items-center justify-between px-4 py-3">
@@ -108,20 +153,23 @@ const Boosts: React.FC<BoostsProps> = () => {
       <section className="mt-8 px-4">
         <p className="text-lg font-semibold">Your daily boosters:</p>
         <div className="flex justify-between items-center gap-4 mt-4  py-3 px-2 rounded-lg">
-          <div className="flex items-center whitespace-nowrap space-x-2 bg-gray-900/30  p-4 w-1/2">
-            <Fire className="w-6 h-6" />
-            <div>
-              <p>Tapping Guru</p>
-              <p className="text-sm">3/3</p>
+          {DailyBoosts.map((boost, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                setIsModalOpen(true);
+                setCurrentCardInView(boost);
+                setStat(boost.title);
+              }}
+              className="flex items-center whitespace-nowrap space-x-2 bg-gray-900/30  p-4 w-1/2"
+            >
+              <boost.image className="w-6 h-6" />
+              <div>
+                <p>{boost.title}</p>
+                <p className="text-sm">{boost.level}/3</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-2 bg-gray-900/30 p-4 w-1/2">
-            <Lightning />
-            <div>
-              <p>Full Tank</p>
-              <p className="text-sm">3/3</p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
       {/* Boosters List */}
@@ -167,6 +215,9 @@ const Boosts: React.FC<BoostsProps> = () => {
       <CardModal
         isOpen={isModalOpen}
         isBoost={true}
+        setIsModalOpen={() => {
+          setIsModalOpen((prev) => !prev);
+        }}
         onClose={() => {
           handleUpgrade(currentCardInView.price, stat);
         }}

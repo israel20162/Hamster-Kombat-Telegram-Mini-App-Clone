@@ -21,10 +21,10 @@ const App: React.FC = () => {
     pointsPerClick,
     startAutoSave,
     profitPerHour,
+    checkAndResetBoosters,
   } = useUserStore();
 
   useEffect(() => {
-    
     async function send() {
       const response = await createOrGetUser(user?.id);
       const data = await response?.json();
@@ -32,9 +32,10 @@ const App: React.FC = () => {
       //   setPoints(data.user.points);
     }
     send();
+    checkAndResetBoosters();
     WebApp.ready();
   }, []);
- 
+
   // Start autosave when the component mounts
   useEffect(() => {
     // startAutoSave();

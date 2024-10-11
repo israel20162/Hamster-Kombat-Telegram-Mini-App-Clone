@@ -6,6 +6,7 @@ import { useTelegram } from '../hooks/useTelegram';
 import WebApp from '@twa-dev/sdk';
 
 
+
 // Define the User State Type
 interface UserState {
     telegramId: string;
@@ -22,6 +23,11 @@ interface UserState {
     autoSaveIntervalId: number | null;  // Added autoSaveIntervalId here
     startAutoSave: () => void;  // Function to start the autosave timer
     stopAutoSave: () => void;   // Function to stop the autosave timer
+    dailyBoosterUses: {
+        tappingBoost: number; // Number of Tapping Boost uses remaining
+        fullEnergy: number;   // Number of Full Energy uses remaining
+    };  // Tracks how many times boosters are used
+    lastBoosterReset: Date;   // The last time the boosters were reset
 }
 
 // Define the User Actions Type
@@ -38,6 +44,10 @@ interface UserActions {
     saveProgress: () => Promise<void>;
     getUpgradeCost: (level: number) => number
     updateEnergy: (newEnergy: number) => void
+    resetPointsPerClick: () => void
+
+    applyFullEnergy: () => void;   // Function to apply the Full Energy boost
+    checkAndResetBoosters: () => void; // Function to reset boosters every 24 hours
 
 
 }
@@ -56,6 +66,8 @@ const id = user?.id
 
 
 
+
+
 // Persisted Zustand Store
 const useUserStore = create(
     persist<UserStore>(
@@ -64,15 +76,17 @@ const useUserStore = create(
             points: 5000,           // Initial points
             profitPerHour: 10,     // Points generated automatically per hour
             pointsPerClick: 1,    // Points generated per click
-            energyBar: 100,       // Initial energy
-            currentEnergy: 100, //persisted energy
+            energyBar: 1000,       // Initial energy
+            currentEnergy: 1000, //persisted energy
             rechargeSpeed: 1,    // Initial recharge speed
             upgradeLevelClick: 1, // Initial level of points per click upgrade
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
             upgradeLevelRecharge: 1,// initial level of recharge speed upgrade
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
-            setInitialState: (user) => { set((state) => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, currentEnergy: state.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge })) },
+            dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 },
+            lastBoosterReset: new Date(),
+            setInitialState: (user) => { set((state) => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, currentEnergy: state.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge, dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 }, lastBoosterReset: new Date(), })) },
             // Action to update points
             updatePoints: (newPoints) => {
                 set({ points: newPoints })
@@ -81,9 +95,9 @@ const useUserStore = create(
                 set({ currentEnergy: newEnergy })
             },
             getUpgradeCost: (level) => {
-                const baseCost = 100; // Initial cost for level 1
-                const multiplier = 3; // Exponential multiplier
-                return Math.floor(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
+                const baseCost = 2500; // Initial cost for level 1
+                const multiplier = 2; // Exponential multiplier
+                return Math.round(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
             },
 
 
@@ -93,6 +107,7 @@ const useUserStore = create(
                 return new Promise<void>((resolve, reject) => {
                     set((state): UpgradeState => {
                         var updatedState;
+                        const { dailyBoosterUses, resetPointsPerClick, energyBar } = get();
                         if (state.points >= cost) {
 
                             switch (stat) {
@@ -122,11 +137,61 @@ const useUserStore = create(
                                     };
                                     resolve(); // Resolving promise if successful
                                     break;
+                                case 'Tapping Boost':
+                                    // Action to apply daily tapping boost
+                                    if (dailyBoosterUses.tappingBoost > 0) {
+                                        setTimeout(() => {
+
+                                            resetPointsPerClick()
+
+                                        }, 30000);
+
+                                        updatedState = {
+                                            pointsPerClick: state.pointsPerClick * 2, // Apply multiplier
+                                            dailyBoosterUses: {
+                                                ...state.dailyBoosterUses,
+                                                tappingBoost: state.dailyBoosterUses.tappingBoost - 1, // Deduct a booster use
+                                            },
+                                        }
+
+                                    } else {
+                                        updatedState = {
+                                            pointsPerClick: state.pointsPerClick, // Apply multiplier
+                                            dailyBoosterUses: {
+                                                ...state.dailyBoosterUses,
+                                                tappingBoost: state.dailyBoosterUses.tappingBoost, // Deduct a booster use
+                                            },
+                                        }
+                                    }
+                                    resolve()
+                                    break;
+                                case 'Full Tank':
+                                    // Action to apply daily tapping boost
+                                    if (dailyBoosterUses.fullEnergy > 0) {
+                                        updatedState = {
+                                            currentEnergy: energyBar, // Fill up energy bar
+                                            dailyBoosterUses: {
+                                                ...state.dailyBoosterUses,
+                                                fullEnergy: state.dailyBoosterUses.fullEnergy - 1, // Deduct a booster use
+                                            },
+                                        }
+
+                                    } else {
+                                        updatedState = {
+                                            // energyBar: energyBar, // Fill up energy bar
+                                            dailyBoosterUses: {
+                                                ...state.dailyBoosterUses,
+                                                fullEnergy: state.dailyBoosterUses.fullEnergy , // Deduct a booster use
+                                            },
+                                        }
+                                    }
+                                    resolve()
+                                    break;
                                 default:
                                     reject('Invalid stat upgrade selected!');
                                     break;
                             }
-                            return updatedState as UpgradeState;; // Return the updated state so it applies correctly
+                            return updatedState as UpgradeState; // Return the updated state so it applies correctly
                         } else {
                             reject('Not enough points to upgrade!');
                         }
@@ -134,6 +199,12 @@ const useUserStore = create(
                     });
                 });
             },
+
+            resetPointsPerClick: () => set((state) => {
+                return {
+                    pointsPerClick: state.pointsPerClick * 0.5
+                }
+            }),
 
 
             // Action to upgrade points per click
@@ -178,6 +249,38 @@ const useUserStore = create(
             updateEnergyBar: (amount) => set((state) => ({
                 energyBar: Math.max(0, state.energyBar - amount),
             })),
+
+
+            applyFullEnergy: () => {
+                const { dailyBoosterUses, energyBar } = get();
+
+                if (dailyBoosterUses.fullEnergy > 0) {
+                    set((state) => ({
+                        energyBar: energyBar, // Fill up energy bar
+                        dailyBoosterUses: {
+                            ...state.dailyBoosterUses,
+                            fullEnergy: state.dailyBoosterUses.fullEnergy - 1, // Deduct a booster use
+                        },
+                    }));
+
+                } else {
+                    console.log("No more Full Energy boosts left today!");
+                }
+            },
+
+            checkAndResetBoosters: () => {
+                const { lastBoosterReset, } = get();
+                const now = new Date();
+
+                const msIn24Hours = 24 * 60 * 60 * 1000;
+
+                if (now.getTime() - new Date(lastBoosterReset).getTime() >= msIn24Hours) {
+                    set(() => ({
+                        dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 }, // Reset boosters
+                        lastBoosterReset: now,
+                    }));
+                }
+            },
 
             // Reset user data (useful for game reset)
             resetUser: () => set({
