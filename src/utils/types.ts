@@ -15,8 +15,8 @@ export type IconProps = {
 export type CardTypes = {
     title: string;
     description: string;
-    image: string;
-    profitPerHour: number;
+    image: string | React.FC<IconProps>;
+    profitPerHour: number | any;
     level: number;
     price: number;
 };

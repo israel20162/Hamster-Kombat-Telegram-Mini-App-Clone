@@ -10,12 +10,15 @@ import WebApp from '@twa-dev/sdk';
 interface UserState {
     telegramId: string;
     points: number;
+    currentEnergy: number;
     profitPerHour: number;
     pointsPerClick: number;
     energyBar: number;
+    rechargeSpeed: number
     upgradeLevelClick: number;
     upgradeLevelEnergy: number;
     upgradeLevelProfit: number;
+    upgradeLevelRecharge: number
     autoSaveIntervalId: number | null;  // Added autoSaveIntervalId here
     startAutoSave: () => void;  // Function to start the autosave timer
     stopAutoSave: () => void;   // Function to stop the autosave timer
@@ -26,10 +29,17 @@ interface UserActions {
     updatePoints: (newPoints: number) => void;
     upgradePointsPerClick: (cost: number) => void;
     upgradeProfitPerHour: (cost: number) => void;
+    upgradeEnergyBar: (cost: number) => void
+    upgradeRechargeSpeed: (cost: number) => void
+    upgradeStats: (cost: number, stat: string) => void
     updateEnergyBar: (amount: number) => void;
     resetUser: () => void;
     setInitialState: (user: UserState) => void
     saveProgress: () => Promise<void>;
+    getUpgradeCost: (level: number) => number
+    updateEnergy: (newEnergy: number) => void
+
+
 }
 
 // Combined User Store Type
@@ -48,19 +58,58 @@ const useUserStore = create(
             profitPerHour: 10,     // Points generated automatically per hour
             pointsPerClick: 1,    // Points generated per click
             energyBar: 100,       // Initial energy
+            currentEnergy: 100, //persisted energy
+            rechargeSpeed: 1,    // Initial recharge speed
             upgradeLevelClick: 1, // Initial level of points per click upgrade
             upgradeLevelEnergy: 1,// Initial level of energy bar upgrade
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
+            upgradeLevelRecharge: 1,// initial level of recharge speed upgrade
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
-            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), profitPerHour: user.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit })) },
+            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge })) },
             // Action to update points
             updatePoints: (newPoints) => {
-                // const { points } = get();
-
                 set({ points: newPoints })
-
-
             },
+            updateEnergy: (newEnergy) => {
+                set({ currentEnergy: newEnergy })
+            },
+            getUpgradeCost: (level) => {
+                const baseCost = 100; // Initial cost for level 1
+                const multiplier = 5; // Exponential multiplier
+                return Math.floor(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
+            },
+
+            upgradeStats: (cost, stat) => set((state) => {
+                if (state.points >= cost) {
+                    switch (stat) {
+                        case 'Multitap':
+                            return {
+                                points: state.points - cost,
+                                pointsPerClick: state.pointsPerClick + 1,
+                                upgradeLevelClick: state.upgradeLevelClick + 1,
+                            };
+                            break;
+                        case 'Energy Limit':
+                            return {
+                                points: state.points - cost,
+                                energyBar: state.energyBar * 1.5,
+                                upgradeLevelEnergy: state.upgradeLevelEnergy + 1,
+                            };
+                            break;
+                        case 'Recharge Speed':
+                            return {
+                                points: state.points - cost,
+                                rechargeSpeed: state.upgradeLevelRecharge + 1,
+                                upgradeLevelRecharge: state.upgradeLevelRecharge + 1,
+                            };
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                return state;
+            }),
 
             // Action to upgrade points per click
             upgradePointsPerClick: (cost) => set((state) => {
@@ -70,6 +119,20 @@ const useUserStore = create(
                         pointsPerClick: state.pointsPerClick + 1,
                         upgradeLevelClick: state.upgradeLevelClick + 1,
                     };
+                }
+                return state;
+            }),
+            // Action to upgrade energy limit
+            upgradeEnergyBar: (cost) => set((state) => {
+                if (state.points >= cost) {
+
+                }
+                return state;
+            }),
+            // Action to upgrade recharge speed
+            upgradeRechargeSpeed: (cost) => set((state) => {
+                if (state.points >= cost) {
+
                 }
                 return state;
             }),
@@ -97,13 +160,14 @@ const useUserStore = create(
                 profitPerHour: 0,
                 pointsPerClick: 1,
                 energyBar: 100,
+                currentEnergy: 100,
                 upgradeLevelClick: 1,
                 upgradeLevelEnergy: 1,
                 upgradeLevelProfit: 1,
             }),
             // Function to save progress to backend
             saveProgress: async () => {
-                const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick } = get();
+                const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick, upgradeLevelEnergy, upgradeLevelRecharge, profitPerHour, rechargeSpeed } = get();
 
 
 
@@ -114,11 +178,15 @@ const useUserStore = create(
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            telegramId: telegramId,
+                            telegramId,
                             points,
                             pointsPerClick,
                             energyBar,
                             upgradeLevelClick,
+                            upgradeLevelEnergy,
+                            upgradeLevelRecharge,
+                            profitPerHour,
+                            rechargeSpeed
                         }),
                     });
 

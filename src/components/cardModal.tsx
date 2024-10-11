@@ -6,10 +6,16 @@ import { CardTypes } from "../utils/types";
 
 interface ModalProps {
   isOpen: boolean;
+  isBoost: boolean;
   onClose: () => void;
   cardDetails: CardTypes;
 }
-const CardModal: React.FC<ModalProps> = ({ isOpen, onClose, cardDetails }) => {
+const CardModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  cardDetails,
+  isBoost,
+}) => {
   // Prevent background scrolling when the modal is open
   useEffect(() => {
     if (isOpen) {
@@ -45,34 +51,42 @@ const CardModal: React.FC<ModalProps> = ({ isOpen, onClose, cardDetails }) => {
         }`}
       >
         <div className="flex flex-col justify-center text-center gap-1">
-          <img
-            className="w-6/12  rounded-lg h-24  mx-auto object-contain mb-2"
-            src={cardDetails.image}
-            alt="Sunset in the mountains"
-          />
+          {isBoost ? (
+            <cardDetails.image className="w-6/12  rounded-lg h-24  mx-auto object-contain mb-2" />
+          ) : (
+            <img
+              className="w-6/12  rounded-lg h-24  mx-auto object-contain mb-2"
+              src={
+                typeof cardDetails.image === "string" ? cardDetails.image : "  "
+              }
+              alt="Sunset in the mountains"
+            />
+          )}
           <h2 className="text-lg font-bold capitalize">{cardDetails.title}</h2>
           <span className="mt-1 text-xs  w-2/3 mx-auto">
             {cardDetails.description}
           </span>
           {/* text-xxs is a css class for smaller text */}
-          <div className="flex flex-col  rounded-lg text-xxs px-4 py-2 mx-auto justify-between items-center">
-            <span className="text-slate-300">Profit per Hour</span>
-            <span className="flex items-center gap-1">
-              {" "}
-              <img
-                src={dollarCoin}
-                alt="Dollar Coin"
-                className="w-[18px] h-[18px]"
-              />
-              {"  "}
-              {formatProfitPerHour(cardDetails.profitPerHour)}
-            </span>
-          </div>
+          {!isBoost && (
+            <div className="flex flex-col  rounded-lg text-xxs px-4 py-2 mx-auto justify-between items-center">
+              <span className="text-slate-300">Profit per Hour</span>
+              <span className="flex items-center gap-1">
+                {" "}
+                <img
+                  src={dollarCoin}
+                  alt="Dollar Coin"
+                  className="w-[18px] h-[18px]"
+                />
+                {"  "}
+                {formatProfitPerHour(cardDetails.profitPerHour)}
+              </span>
+            </div>
+          )}
           <div className="px-4  flex justify-center">
             <div className="px-4  flex items-center gap-2 space-x-2">
               <img src={dollarCoin} alt="Dollar Coin" className="w-8 h-8" />
               <p className="text-3xl text-white">
-                {(cardDetails.price).toLocaleString()}
+                {cardDetails.price.toLocaleString()}
               </p>
             </div>
           </div>

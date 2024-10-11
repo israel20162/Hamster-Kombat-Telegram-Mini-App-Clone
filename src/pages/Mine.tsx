@@ -31,7 +31,14 @@ interface Props {
 
 const Mine: React.FC<Props> = (props) => {
   //  const [points, setPoints] = useState(useUserStore((state) => state.points));
-  const { updatePoints ,points} = useUserStore();
+  const {
+    updatePoints,
+    points,
+    currentEnergy,
+    updateEnergy,
+    energyBar,
+    rechargeSpeed,
+  } = useUserStore();
   const profitPerHour = props.profitPerHour;
   const pointsToAdd = props.pointsToAdd;
   const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
@@ -52,6 +59,11 @@ const Mine: React.FC<Props> = (props) => {
       const pointsPerSecond = Math.floor(profitPerHour / 3600);
      
       updatePoints(points + pointsPerSecond);
+      updateEnergy(
+        currentEnergy < energyBar
+          ? currentEnergy + rechargeSpeed
+          : currentEnergy
+      );
       //  setPoints((prev) => prev + pointsPerSecond);
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
     };
@@ -339,6 +351,7 @@ const Mine: React.FC<Props> = (props) => {
       </div>
       <CardModal
         isOpen={isModalOpen}
+        isBoost={false}
         onClose={() => {
           setIsModalOpen((prev) => !prev);
         }}

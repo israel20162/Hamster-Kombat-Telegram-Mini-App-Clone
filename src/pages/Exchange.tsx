@@ -8,6 +8,7 @@ import formatProfitPerHour from "../utils/formatProfitPerHour";
 // import calculateTimeLeft from "../utils/calculateTimeLeft";
 import useUserStore from "../store/userStore";
 import { AppContext, AppContextTypes } from "../context/appContext";
+import Fire from "../icons/Fire";
 
 interface Props {
   points: number;
@@ -45,7 +46,8 @@ const Exchange: React.FC<Props> = (props) => {
     1000000000, // Lord
   ];
   // const [points, setPoints] = useState(useUserStore((state) => state.points));
-  const { updatePoints, energyBar ,points} = useUserStore();
+  const { updatePoints, energyBar, currentEnergy, updateEnergy, points ,rechargeSpeed} =
+    useUserStore();
   // const setPoints = props.setPoints;
   const pointsToAdd = props.pointsToAdd;
   const profitPerHour = props.profitPerHour;
@@ -55,7 +57,7 @@ const Exchange: React.FC<Props> = (props) => {
   const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>(
     []
   );
-  const [energy, setEnergy] = useState<number | any>(energyBar);
+  const [energy, setEnergy] = useState<number | any>(currentEnergy);
   const totalEnergy = energyBar;
 
   // const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
@@ -90,6 +92,7 @@ const Exchange: React.FC<Props> = (props) => {
     if (energy >= pointsToAdd) {
       // setPoints(points + pointsToAdd);
       updatePoints(points + pointsToAdd);
+      updateEnergy(energy - pointsToAdd);
       setEnergy((prev: any) => prev - pointsToAdd);
       setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
     }
@@ -120,13 +123,15 @@ const Exchange: React.FC<Props> = (props) => {
     }
   }, [points, levelIndex, levelMinPoints, levelNames.length]);
   useEffect(() => {
-     const pointsPerSecond = Math.floor(profitPerHour / 3600);
+    const pointsPerSecond = Math.floor(profitPerHour / 3600);
     // const pointsPerSecond = Math.floor(70000 / 3600);
     const interval = setInterval(() => {
-       updatePoints(points + pointsPerSecond);
+      updatePoints(points + pointsPerSecond);
       // setPoints((prevPoints) => prevPoints + pointsPerSecond);
-
-      setEnergy((prev: any) => (energy < totalEnergy ? prev + 1 : totalEnergy));
+      updateEnergy(energy < totalEnergy ? energy + rechargeSpeed : energy);
+      setEnergy((prev: any) =>
+        energy < totalEnergy ? prev + rechargeSpeed : energy
+      );
     }, 1000);
     return () => clearInterval(interval);
   }, [profitPerHour, energy, points]);
@@ -264,14 +269,14 @@ const Exchange: React.FC<Props> = (props) => {
               <div className="font-bold text-xl">
                 {energy} / {totalEnergy}
               </div>
-              <span
+              <p
                 onClick={() => {
                   setPage("Boosts");
                 }}
-                className="text-gray-100 text-lg"
+                className="text-gray-100 text-lg flex gap-1"
               >
-                Boosts
-              </span>
+                <Fire /> <span>Boosts</span>
+              </p>
             </div>
           </div>
         </div>

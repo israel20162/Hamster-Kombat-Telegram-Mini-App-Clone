@@ -21,9 +21,11 @@ const App: React.FC = () => {
     pointsPerClick,
     startAutoSave,
     profitPerHour,
+   resetUser
   } = useUserStore();
 
   useEffect(() => {
+    
     async function send() {
       const response = await createOrGetUser(user?.id);
       const data = await response?.json();
@@ -33,7 +35,7 @@ const App: React.FC = () => {
     send();
     WebApp.ready();
   }, []);
-
+ 
   // Start autosave when the component mounts
   useEffect(() => {
     // startAutoSave();
@@ -48,8 +50,7 @@ const App: React.FC = () => {
   }, []);
 
   const pointsToAdd = pointsPerClick;
- 
- 
+
   return (
     <Switch fallback={<p>A fallback</p>}>
       <Match when={page == "Exchange"}>
@@ -60,7 +61,6 @@ const App: React.FC = () => {
             setPoints={setPoints}
             profitPerHour={profitPerHour}
             user={user}
-          
           />
 
           <Footer setpage={setPage} page={page} />
@@ -92,7 +92,7 @@ const App: React.FC = () => {
       </Match>
       <Match when={page == "Boosts"}>
         <div className="bg-black relative ">
-          <Boosts points={points}/>
+          <Boosts points={points} />
           <Footer setpage={setPage} page={page} />
         </div>
       </Match>
