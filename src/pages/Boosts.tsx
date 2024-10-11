@@ -86,7 +86,7 @@ const Boosts: React.FC<BoostsProps> = () => {
     ).finally(()=>{
        setIsModalOpen((prev) => !prev);
     });
-    setIsModalOpen((prev) => !prev);
+   
   };
   
   return (

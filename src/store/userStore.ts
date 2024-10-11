@@ -72,7 +72,7 @@ const useUserStore = create(
             upgradeLevelProfit: 1,// Initial level of profit per hour upgrade
             upgradeLevelRecharge: 1,// initial level of recharge speed upgrade
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
-            setInitialState: (user) => { set(() => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge })) },
+            setInitialState: (user) => { set((state) => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, currentEnergy: state.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge })) },
             // Action to update points
             updatePoints: (newPoints) => {
                 set({ points: newPoints })
@@ -86,15 +86,15 @@ const useUserStore = create(
                 return Math.floor(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
             },
 
-           
-          
-           
+
+
+
             upgradeStats: (cost, stat) => {
                 return new Promise<void>((resolve, reject) => {
-                    set((state):UpgradeState => {
+                    set((state): UpgradeState => {
                         var updatedState;
                         if (state.points >= cost) {
-                           
+
                             switch (stat) {
                                 case 'Multitap':
                                     updatedState = {
@@ -126,7 +126,7 @@ const useUserStore = create(
                                     reject('Invalid stat upgrade selected!');
                                     break;
                             }
-                            return updatedState as  UpgradeState;; // Return the updated state so it applies correctly
+                            return updatedState as UpgradeState;; // Return the updated state so it applies correctly
                         } else {
                             reject('Not enough points to upgrade!');
                         }
