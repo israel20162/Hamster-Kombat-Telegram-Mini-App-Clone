@@ -31,6 +31,7 @@ const CardModal: React.FC<ModalProps> = ({
       document.body.classList.remove("overflow-hidden");
     };
   }, [isOpen]);
+  var imgUrl = typeof cardDetails.image == "string" ? cardDetails.image : "";
   return (
     <>
       {/* Backdrop */}
@@ -56,9 +57,7 @@ const CardModal: React.FC<ModalProps> = ({
           ) : (
             <img
               className="w-6/12  rounded-lg h-24  mx-auto object-contain mb-2"
-              src={
-                typeof cardDetails.image == "string" ? cardDetails.image : ""
-              }
+              src={imgUrl}
               alt="Sunset in the mountains"
             />
           )}
