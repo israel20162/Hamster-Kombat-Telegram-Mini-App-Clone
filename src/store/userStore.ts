@@ -99,7 +99,7 @@ const useUserStore = create(
                         case 'Recharge Speed':
                             return {
                                 points: state.points - cost,
-                                rechargeSpeed: state.upgradeLevelRecharge + 1,
+                                rechargeSpeed: state.rechargeSpeed + 1,
                                 upgradeLevelRecharge: state.upgradeLevelRecharge + 1,
                             };
                             break;
@@ -161,6 +161,8 @@ const useUserStore = create(
                 pointsPerClick: 1,
                 energyBar: 100,
                 currentEnergy: 100,
+                rechargeSpeed:1,
+                upgradeLevelRecharge:1,
                 upgradeLevelClick: 1,
                 upgradeLevelEnergy: 1,
                 upgradeLevelProfit: 1,

@@ -49,6 +49,7 @@ const Exchange: React.FC<Props> = (props) => {
   const { updatePoints, energyBar, currentEnergy, updateEnergy, points ,rechargeSpeed} =
     useUserStore();
   // const setPoints = props.setPoints;
+  
   const pointsToAdd = props.pointsToAdd;
   const profitPerHour = props.profitPerHour;
 
@@ -78,6 +79,7 @@ const Exchange: React.FC<Props> = (props) => {
   // }, []);
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
@@ -124,6 +126,7 @@ const Exchange: React.FC<Props> = (props) => {
   }, [points, levelIndex, levelMinPoints, levelNames.length]);
   useEffect(() => {
     const pointsPerSecond = Math.floor(profitPerHour / 3600);
+
     // const pointsPerSecond = Math.floor(70000 / 3600);
     const interval = setInterval(() => {
       updatePoints(points + pointsPerSecond);

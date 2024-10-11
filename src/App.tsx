@@ -21,7 +21,6 @@ const App: React.FC = () => {
     pointsPerClick,
     startAutoSave,
     profitPerHour,
-   resetUser
   } = useUserStore();
 
   useEffect(() => {
