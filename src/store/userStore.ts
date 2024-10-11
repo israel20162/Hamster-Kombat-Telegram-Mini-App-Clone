@@ -31,7 +31,7 @@ interface UserActions {
     upgradeProfitPerHour: (cost: number) => void;
     upgradeEnergyBar: (cost: number) => void
     upgradeRechargeSpeed: (cost: number) => void
-    upgradeStats: (cost: number, stat: string) => void
+    upgradeStats: (cost: number, stat: string) => Promise<unknown>
     updateEnergyBar: (amount: number) => void;
     resetUser: () => void;
     setInitialState: (user: UserState) => void
@@ -41,9 +41,16 @@ interface UserActions {
 
 
 }
+type UpgradeState = {
+    points: number;
+} & (
+        | { pointsPerClick: number; upgradeLevelClick: number } // If the upgrade is 'Multitap'
+        | { energyBar: number; upgradeLevelEnergy: number }     // If the upgrade is 'Energy Limit'
+        | { rechargeSpeed: number; upgradeLevelRecharge: number } // If the upgrade is 'Recharge Speed'
+    );
 
 // Combined User Store Type
-type UserStore = UserState & UserActions; 
+type UserStore = UserState & UserActions;
 const { user } = useTelegram()
 const id = user?.id
 
@@ -75,41 +82,59 @@ const useUserStore = create(
             },
             getUpgradeCost: (level) => {
                 const baseCost = 100; // Initial cost for level 1
-                const multiplier = 5; // Exponential multiplier
+                const multiplier = 3; // Exponential multiplier
                 return Math.floor(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
             },
 
-            upgradeStats: (cost, stat) => set((state) => {
-                if (state.points >= cost) {
-                    switch (stat) {
-                        case 'Multitap':
-                            return {
-                                points: state.points - cost,
-                                pointsPerClick: state.pointsPerClick + 1,
-                                upgradeLevelClick: state.upgradeLevelClick + 1,
-                            };
-                            break;
-                        case 'Energy Limit':
-                            return {
-                                points: state.points - cost,
-                                energyBar: state.energyBar * 1.5,
-                                upgradeLevelEnergy: state.upgradeLevelEnergy + 1,
-                            };
-                            break;
-                        case 'Recharge Speed':
-                            return {
-                                points: state.points - cost,
-                                rechargeSpeed: state.rechargeSpeed + 1,
-                                upgradeLevelRecharge: state.upgradeLevelRecharge + 1,
-                            };
-                            break;
+           
+          
+           
+            upgradeStats: (cost, stat) => {
+                return new Promise<void>((resolve, reject) => {
+                    set((state):UpgradeState => {
+                        var updatedState;
+                        if (state.points >= cost) {
+                           
+                            switch (stat) {
+                                case 'Multitap':
+                                    updatedState = {
+                                        points: state.points - cost,
+                                        pointsPerClick: state.pointsPerClick + 1,
+                                        upgradeLevelClick: state.upgradeLevelClick + 1,
+                                    };
+                                    resolve(); // Resolving promise if successful
+                                    break;
 
-                        default:
-                            break;
-                    }
-                }
-                return state;
-            }),
+                                    break;
+                                case 'Energy Limit':
+                                    updatedState = {
+                                        points: state.points - cost,
+                                        energyBar: state.energyBar + 500,
+                                        upgradeLevelEnergy: state.upgradeLevelEnergy + 1,
+                                    };
+                                    resolve(); // Resolving promise if successful
+                                    break;
+                                case 'Recharge Speed':
+                                    updatedState = {
+                                        points: state.points - cost,
+                                        rechargeSpeed: state.rechargeSpeed + 1,
+                                        upgradeLevelRecharge: state.upgradeLevelRecharge + 1,
+                                    };
+                                    resolve(); // Resolving promise if successful
+                                    break;
+                                default:
+                                    reject('Invalid stat upgrade selected!');
+                                    break;
+                            }
+                            return updatedState as  UpgradeState;; // Return the updated state so it applies correctly
+                        } else {
+                            reject('Not enough points to upgrade!');
+                        }
+                        return state; // This ensures the state is preserved when no changes are made.
+                    });
+                });
+            },
+
 
             // Action to upgrade points per click
             upgradePointsPerClick: (cost) => set((state) => {
@@ -161,8 +186,8 @@ const useUserStore = create(
                 pointsPerClick: 1,
                 energyBar: 100,
                 currentEnergy: 100,
-                rechargeSpeed:1,
-                upgradeLevelRecharge:1,
+                rechargeSpeed: 1,
+                upgradeLevelRecharge: 1,
                 upgradeLevelClick: 1,
                 upgradeLevelEnergy: 1,
                 upgradeLevelProfit: 1,

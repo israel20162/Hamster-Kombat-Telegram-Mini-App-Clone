@@ -8,11 +8,11 @@ import useUserStore from "../store/userStore";
 import { dollarCoin } from "../images";
 import CardModal from "../components/cardModal";
 import { CardTypes } from "../utils/types";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface BoostsProps {
   points: number | string;
 }
-
-
 
 const Boosts: React.FC<BoostsProps> = () => {
   const [currentCardInView, setCurrentCardInView] = useState<CardTypes>({
@@ -60,6 +60,35 @@ const Boosts: React.FC<BoostsProps> = () => {
       price: getUpgradeCost(upgradeLevelRecharge),
     },
   ];
+
+  const handleUpgrade = async (cost: number, stat: string) => {
+    const resolveAfter3Sec = new Promise(async (resolve) => {
+      setTimeout(() => resolve(upgradeStats(cost, stat)), 3000);
+    });
+    await toast.promise(
+      resolveAfter3Sec,
+      {
+        pending: "Processing your upgrade...",
+        success: "Upgrade successful! 🎉",
+        error: "Not enough points to upgrade!",
+      },
+      {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Slide,
+      }
+    ).finally(()=>{
+       setIsModalOpen((prev) => !prev);
+    });
+    setIsModalOpen((prev) => !prev);
+  };
+  
   return (
     <div className="overflow-auto text-white font-sans">
       <header className="flex items-center justify-between px-4 py-3">
@@ -114,7 +143,7 @@ const Boosts: React.FC<BoostsProps> = () => {
                 <p>{boost.title}</p>
                 <p className="text-sm text-gray-300 flex w-full gap-1">
                   <img src={dollarCoin} className="h-4 w-4" alt="" />{" "}
-                  {boost.price} | level {boost.level}
+                  {boost.price.toLocaleString()} | level {boost.level}
                 </p>
               </div>
             </div>
@@ -139,10 +168,17 @@ const Boosts: React.FC<BoostsProps> = () => {
         isOpen={isModalOpen}
         isBoost={true}
         onClose={() => {
-          setIsModalOpen((prev) => !prev);
-          upgradeStats(currentCardInView.price, stat);
+          handleUpgrade(currentCardInView.price, stat);
         }}
         cardDetails={currentCardInView}
+      />
+      <ToastContainer
+        style={{
+          width: "70vw",
+          justifySelf: "end",
+          whiteSpace: "nowrap",
+          margin: "10px 5px",
+        }}
       />
     </div>
   );
