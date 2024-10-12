@@ -162,6 +162,7 @@ const useUserStore = create(
                                                 tappingBoost: state.dailyBoosterUses.tappingBoost, // Deduct a booster use
                                             },
                                         }
+                                        reject('No more Tapping Boosts left !');
                                     }
                                     resolve()
                                     break;
@@ -184,6 +185,7 @@ const useUserStore = create(
                                                 fullEnergy: state.dailyBoosterUses.fullEnergy , // Deduct a booster use
                                             },
                                         }
+                                        reject('No more Full Energy boosts left !');
                                     }
                                     resolve()
                                     break;
@@ -269,12 +271,14 @@ const useUserStore = create(
             },
 
             checkAndResetBoosters: () => {
-                const { lastBoosterReset, } = get();
+                const { lastBoosterReset } = get();
                 const now = new Date();
 
-                const msIn24Hours = 24 * 60 * 60 * 1000;
+                // Extract only the year, month, and day for both dates
+                const lastResetDate = new Date(lastBoosterReset).setHours(0, 0, 0, 0);
+                const currentDate = new Date().setHours(0, 0, 0, 0);
 
-                if (now.getTime() - new Date(lastBoosterReset).getTime() >= msIn24Hours) {
+                if (currentDate > lastResetDate) {
                     set(() => ({
                         dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 }, // Reset boosters
                         lastBoosterReset: now,

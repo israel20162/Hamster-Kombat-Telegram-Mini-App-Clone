@@ -98,7 +98,11 @@ const Boosts: React.FC<BoostsProps> = () => {
         {
           pending: "Processing your upgrade...",
           success: "Upgrade successful! 🎉",
-          error: "Not enough points to upgrade!",
+          error: {
+            render({ data }: { data: string }) {
+              return <div>{data}</div>;
+            },
+          },
         },
         {
           position: "top-right",
@@ -112,9 +116,15 @@ const Boosts: React.FC<BoostsProps> = () => {
           transition: Slide,
         }
       )
-      .finally(() => {
+      .then(() => {
         setIsModalOpen((prev) => !prev);
-        setPage('Exchange')
+        if (stat == "Tapping Boost" || stat == "Full Tank") {
+          setPage("Exchange");
+        }
+      })
+      .catch((error) => {
+        setIsModalOpen((prev) => !prev);
+        console.log(error);
       });
   };
 

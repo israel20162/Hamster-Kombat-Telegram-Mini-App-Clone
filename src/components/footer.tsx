@@ -4,6 +4,8 @@ import Friends from "../icons/Friends";
 import Coins from "../icons/Coins";
 import { binanceLogo, hamsterCoin } from "../images";
 import { Show } from "../utils/reactComponents";
+import { BOT_USERNAME } from "../server/variables";
+import { useTelegram } from "../hooks/useTelegram";
 
 interface FooterProps {
   setpage: React.Dispatch<React.SetStateAction<string>>;
@@ -11,17 +13,25 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
+  const { user, WebApp } = useTelegram();
   return (
-    <>
+    <div className="fixed bottom-0 left-0 w-full ">
       <Show when={props.page == "Friends"}>
-        <div className="flex items-center text-white mb-2 mx-2 gap-2">
+        <div
+          onClick={() => {
+            WebApp.openTelegramLink(
+              `https://t.me/share/url?url=http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`
+            );
+          }}
+          className="flex items-center text-white mb-2 mx-2 gap-2"
+        >
           <button className="bg-blue-500 p-4 w-9/12 rounded-lg">
             invite friends
           </button>
           <button className="bg-blue-500 p-4 w-3/12 rounded-md">copy</button>
         </div>
       </Show>
-      <div className="fixed bottom-0 left-0 w-full    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
+      <div className="    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
         <div
           onClick={() => props.setpage("Exchange")}
           className={`text-center text-[#85827d] w-1/5 p-2 m-1 ${
@@ -63,7 +73,7 @@ const Footer: React.FC<FooterProps> = (props) => {
           <p className="mt-1">Airdrop</p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Footer;
