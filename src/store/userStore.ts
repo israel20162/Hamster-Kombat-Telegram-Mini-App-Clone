@@ -14,6 +14,7 @@ interface UserState {
     currentEnergy: number;
     profitPerHour: number;
     pointsPerClick: number;
+    originalPointsPerClick: number;
     energyBar: number;
     rechargeSpeed: number
     upgradeLevelClick: number;
@@ -76,6 +77,7 @@ const useUserStore = create(
             points: 5000,           // Initial points
             profitPerHour: 10,     // Points generated automatically per hour
             pointsPerClick: 1,    // Points generated per click
+            originalPointsPerClick: 1,  // Keep track of the original value before boost
             energyBar: 1000,       // Initial energy
             currentEnergy: 1000, //persisted energy
             rechargeSpeed: 1,    // Initial recharge speed
@@ -182,7 +184,7 @@ const useUserStore = create(
                                             // energyBar: energyBar, // Fill up energy bar
                                             dailyBoosterUses: {
                                                 ...state.dailyBoosterUses,
-                                                fullEnergy: state.dailyBoosterUses.fullEnergy , // Deduct a booster use
+                                                fullEnergy: state.dailyBoosterUses.fullEnergy, // Deduct a booster use
                                             },
                                         }
                                         reject('No more Full Energy boosts left !');
@@ -204,7 +206,7 @@ const useUserStore = create(
 
             resetPointsPerClick: () => set((state) => {
                 return {
-                    pointsPerClick: state.pointsPerClick * 0.5
+                    pointsPerClick: Math.round(state.pointsPerClick * 0.5)
                 }
             }),
 
@@ -298,6 +300,8 @@ const useUserStore = create(
                 upgradeLevelClick: 1,
                 upgradeLevelEnergy: 1,
                 upgradeLevelProfit: 1,
+                dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 },
+                lastBoosterReset: new Date(),
             }),
             // Function to save progress to backend
             saveProgress: async () => {
