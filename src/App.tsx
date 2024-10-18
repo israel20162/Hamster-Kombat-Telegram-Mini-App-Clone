@@ -97,7 +97,7 @@ const App: React.FC = () => {
         </div>
       </Match>
     </Switch>
-  );
+  ); 
 };
 
 export default App;
