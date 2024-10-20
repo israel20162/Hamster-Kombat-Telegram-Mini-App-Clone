@@ -31,7 +31,7 @@ export async function createOrGetUser(telegramId: number | undefined, username: 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ telegramId: telegramId, username: username })
+            body: JSON.stringify({ telegramId: telegramId, username: username, fren: null })
         });
 
         // if (!response.ok) {
