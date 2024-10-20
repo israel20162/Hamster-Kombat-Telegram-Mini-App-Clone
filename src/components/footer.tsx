@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Mine from "../icons/Mine";
 import Friends from "../icons/Friends";
 import Coins from "../icons/Coins";
@@ -14,21 +16,47 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = (props) => {
   const { user, WebApp } = useTelegram();
+  const [isCopied, setIsCopied] = useState(false);
+  const referralLink = `https://t.me/share/url?url=http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`;
+  // Function to copy the referral link
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setIsCopied(true);
+
+      // Show a success toast notification
+      toast.info("Referral link copied to clipboard!", {
+        position: 'top-center',
+        autoClose: 1000,
+      });
+
+      // Reset the copied state after a short delay
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+      toast.error("Failed to copy the link. Try again.");
+    }
+  };
   return (
     <div className="fixed bottom-0 left-0 w-full ">
       <Show when={props.page == "Friends"}>
-        <div
-          onClick={() => {
-            WebApp.openTelegramLink(
-              `https://t.me/share/url?url=http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`
-            );
-          }}
-          className="flex items-center text-white mb-2 mx-2 gap-2"
-        >
-          <button className="bg-blue-500 p-4 w-9/12 rounded-lg">
+        <div className="flex items-center text-white mb-2 mx-2 gap-2">
+          <button
+            onClick={() => {
+              WebApp.openTelegramLink(referralLink);
+            }}
+            className="bg-blue-500 p-4 w-9/12 rounded-lg"
+          >
             invite friends
           </button>
-          <button className="bg-blue-500 p-4 w-3/12 rounded-md">copy</button>
+          <button
+            onClick={() => copyToClipboard()}
+            className="bg-blue-500 p-4 w-3/12 rounded-md"
+          >
+            {isCopied ? "Copied!" : "Copy"}
+          </button>
         </div>
       </Show>
       <div className="    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
@@ -73,6 +101,14 @@ const Footer: React.FC<FooterProps> = (props) => {
           <p className="mt-1">Airdrop</p>
         </div>
       </div>
+      <ToastContainer
+        style={{
+          width: "90vw",
+          justifySelf: "end",
+          whiteSpace: "nowrap",
+          margin: "10px 5px",
+        }}
+      />
     </div>
   );
 };

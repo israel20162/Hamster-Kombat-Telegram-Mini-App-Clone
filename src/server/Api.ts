@@ -1,4 +1,4 @@
- import {API_URL} from "./variables"
+import { API_URL } from "./variables"
 
 /**
  * Uses simple fetch() to send message to the bot server using REST API
@@ -6,7 +6,7 @@
  * @param message the message to be sent
  * @param queryId get from webApp.initDataUnsafe?.query_id
  */
-export const sendMessageToServer = async (message:string, queryId:any) => {
+export const sendMessageToServer = async (message: string, queryId: any) => {
     const body = {
         queryId: queryId,
         message: message
@@ -24,14 +24,14 @@ export const sendMessageToServer = async (message:string, queryId:any) => {
 
 
 
-export async function createOrGetUser(telegramId: number | undefined) {
+export async function createOrGetUser(telegramId: number | undefined, username: string | undefined) {
     try {
-       return await fetch(`${API_URL}/user`, {
+        return await fetch(`${API_URL}/user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ telegramId:telegramId })
+            body: JSON.stringify({ telegramId: telegramId, username: username })
         });
 
         // if (!response.ok) {

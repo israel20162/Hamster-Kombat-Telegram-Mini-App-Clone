@@ -6,7 +6,7 @@ import formatProfitPerHour from "../utils/formatProfitPerHour";
 
 interface FriendCardProps {
   name: string;
-  level: string;
+  level?: string;
   points: number;
   profitPerHour: number;
   hasTelgramPremium?: boolean;
