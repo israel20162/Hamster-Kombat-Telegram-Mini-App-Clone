@@ -58,6 +58,14 @@ const Footer: React.FC<FooterProps> = (props) => {
             {isCopied ? "Copied!" : "Copy"}
           </button>
         </div>
+        <ToastContainer
+          style={{
+            width: "90vw",
+            justifySelf: "end",
+            whiteSpace: "nowrap",
+            margin: "10px 5px",
+          }}
+        />
       </Show>
       <div className="    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
         <div
@@ -101,14 +109,6 @@ const Footer: React.FC<FooterProps> = (props) => {
           <p className="mt-1">Airdrop</p>
         </div>
       </div>
-      <ToastContainer
-        style={{
-          width: "90vw",
-          justifySelf: "end",
-          whiteSpace: "nowrap",
-          margin: "10px 5px",
-        }}
-      />
     </div>
   );
 };
