@@ -22,9 +22,11 @@ export type CardTypes = {
 };
 
 export type FriendTypes = {
-    name:string
-    level: string;
+    name?: string
+    telegramId?: string | any;
+    username?: string;
+    level?: string;
     points: number;
-    profitPerHour?: number;
+    profitPerHour: number;
     hasTelgramPremium?: boolean;
 }

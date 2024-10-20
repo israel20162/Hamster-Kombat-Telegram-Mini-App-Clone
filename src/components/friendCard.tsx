@@ -3,15 +3,16 @@ import Hamster from "../icons/Hamster";
 import { dollarCoin } from "../images";
 import formatCardPrice from "../utils/formatCardPrice";
 import formatProfitPerHour from "../utils/formatProfitPerHour";
+import { FriendTypes } from "../utils/types";
 
-interface FriendCardProps {
-  name: string;
-  level?: string;
-  points: number;
-  profitPerHour: number;
-  hasTelgramPremium?: boolean;
-}
-const FriendCard: React.FC<FriendCardProps> = (props) => {
+// interface FriendCardProps {
+//   name: string;
+//   level?: string;
+//   points: number;
+//   profitPerHour: number;
+//   hasTelgramPremium?: boolean;
+// }
+const FriendCard: React.FC<FriendTypes> = (props) => {
   return (
     <div className="text-end col-span-1 bg-gray-700 p-4 w-11/12 overflow-clip mx-auto rounded-2xl flex justify-between">
       <div className="flex items-center space-x-2">
@@ -19,7 +20,7 @@ const FriendCard: React.FC<FriendCardProps> = (props) => {
           <Hamster size={42} className="text-[#d4d4d4] p-1" />
         </div>
         <div>
-          <p className="text-sm flex flex-col gap-1 items-start">
+          <div className="text-sm flex flex-col gap-1 items-start">
             <span className="capitalize">{props.name} </span>
             <div className="text-xs flex items-center justify-evenly max-w-15">
               <span>{props.level}</span>
@@ -30,7 +31,7 @@ const FriendCard: React.FC<FriendCardProps> = (props) => {
               </span>
               <span className="text-gray-500"> ({formatProfitPerHour(props.profitPerHour)})</span>
             </div>
-          </p>
+          </div>
         </div>
       </div>
 

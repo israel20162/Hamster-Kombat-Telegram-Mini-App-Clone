@@ -30,6 +30,7 @@ const Boosts: React.FC<BoostsProps> = () => {
   const [stat, setStat] = useState("");
   const {
     points,
+    updatePoints,
     upgradeLevelClick,
     upgradeStats,
     getUpgradeCost,
@@ -39,6 +40,8 @@ const Boosts: React.FC<BoostsProps> = () => {
     rechargeSpeed,
     energyBar,
     updateEnergy,
+    profitPerHour,
+
     dailyBoosterUses,
   } = useUserStore();
   const { setPage } = usePage();
@@ -130,6 +133,10 @@ const Boosts: React.FC<BoostsProps> = () => {
 
   useEffect(() => {
     const updateCountdowns = () => {
+      // const pointsPerSecond = Math.floor(7000900 / 3600);
+      const pointsPerSecond = Math.floor(profitPerHour / 3600);
+
+      updatePoints(points + pointsPerSecond);
       updateEnergy(
         currentEnergy < energyBar
           ? currentEnergy + rechargeSpeed

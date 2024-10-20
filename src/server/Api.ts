@@ -1,3 +1,4 @@
+import { FriendTypes } from "../utils/types"
 import { API_URL } from "./variables"
 
 /**
@@ -22,9 +23,18 @@ export const sendMessageToServer = async (message: string, queryId: any) => {
     })
 }
 
+export async function getUserFriends(telegramId: string | undefined) {
+    try {
+        const res = await fetch(`${API_URL}/get-friends/${telegramId}`)
+        const data = await res.json()
+        return data as FriendTypes[]
+    } catch (error) {
+        console.error('Error getting user friends', error);
+    }
 
+}
 
-export async function createOrGetUser(telegramId: number | undefined, username: string | undefined) {
+export async function createOrGetUser(telegramId: number | string | undefined, username: string | undefined) {
     try {
         return await fetch(`${API_URL}/user`, {
             method: 'POST',
