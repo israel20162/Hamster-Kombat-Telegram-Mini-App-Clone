@@ -95,7 +95,7 @@ const useUserStore = create(
                 set({ points: newPoints })
             },
             updateEnergy: (newEnergy) => {
-                set({ currentEnergy: newEnergy })
+                set((state) => ({ currentEnergy: newEnergy > state.energyBar ? state.energyBar : newEnergy }))
             },
             getUpgradeCost: (level) => {
                 const baseCost = 2500; // Initial cost for level 1

@@ -53,11 +53,10 @@ const Mine: React.FC<Props> = (props) => {
     price: 0,
   });
   useEffect(() => {
-  
     const updateCountdowns = () => {
-        // const pointsPerSecond = Math.floor(7000900 / 3600);
+      // const pointsPerSecond = Math.floor(7000900 / 3600);
       const pointsPerSecond = Math.floor(profitPerHour / 3600);
-     
+
       updatePoints(points + pointsPerSecond);
       updateEnergy(
         currentEnergy < energyBar
@@ -68,7 +67,7 @@ const Mine: React.FC<Props> = (props) => {
       setDailyComboTimeLeft(calculateTimeLeft(12, true));
     };
 
-     updateCountdowns();
+    updateCountdowns();
     const interval = setInterval(updateCountdowns, 1000); // Update every minute
 
     return () => clearInterval(interval);

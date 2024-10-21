@@ -58,7 +58,7 @@ const Exchange: React.FC<Props> = (props) => {
   const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>(
     []
   );
-  const [energy, setEnergy] = useState<number | any>(currentEnergy);
+
   const totalEnergy = energyBar;
 
   // const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
@@ -91,11 +91,11 @@ const Exchange: React.FC<Props> = (props) => {
       card.style.transform = "";
     }, 100);
 
-    if (energy >= pointsToAdd) {
+    if (currentEnergy >= pointsToAdd) {
       // setPoints(points + pointsToAdd);
       updatePoints(points + pointsToAdd);
-      updateEnergy(energy - pointsToAdd);
-      setEnergy((prev: any) => prev - pointsToAdd);
+      updateEnergy(currentEnergy - pointsToAdd);
+     
       setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
     }
   };
@@ -131,13 +131,15 @@ const Exchange: React.FC<Props> = (props) => {
     const interval = setInterval(() => {
       updatePoints(points + pointsPerSecond);
       // setPoints((prevPoints) => prevPoints + pointsPerSecond);
-      updateEnergy(energy < totalEnergy ? energy + rechargeSpeed : energy);
-      setEnergy((prev: any) =>
-        energy < totalEnergy ? prev + rechargeSpeed : energy
+      updateEnergy(
+        currentEnergy < totalEnergy
+          ? currentEnergy + rechargeSpeed
+          : currentEnergy
       );
+      
     }, 1000);
     return () => clearInterval(interval);
-  }, [profitPerHour, energy, points]);
+  }, [profitPerHour, currentEnergy, points]);
 
   return (
     <div className="bg-black flex justify-center h-screen overflow-scroll min-h-screen mb-[10vh]">
@@ -270,7 +272,7 @@ const Exchange: React.FC<Props> = (props) => {
             </div>
             <div className="flex justify-between flex-row   py-10  h-full px-4 bg-[#1d2025]">
               <div className="font-bold text-xl">
-                {energy} / {totalEnergy}
+                {currentEnergy} / {totalEnergy}
               </div>
               <p
                 onClick={() => {
