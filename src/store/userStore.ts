@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { API_URL } from '../server/variables';
 import { useTelegram } from '../hooks/useTelegram';
-import WebApp from '@twa-dev/sdk';
+// import WebApp from '@twa-dev/sdk';
 
 
 
@@ -29,16 +29,15 @@ interface UserState {
         fullEnergy: number;   // Number of Full Energy uses remaining
     };  // Tracks how many times boosters are used
     lastBoosterReset: Date;   // The last time the boosters were reset
+    lastOnline: Date | null;  // the last time the user was online | to calculate offline PPH
+
 }
 
 // Define the User Actions Type
 interface UserActions {
     updatePoints: (newPoints: number) => void;
-    upgradePointsPerClick: (cost: number) => void;
     upgradeProfitPerHour: (cost: number) => void;
-    upgradeEnergyBar: (cost: number) => void
-    upgradeRechargeSpeed: (cost: number) => void
-    upgradeStats: (cost: number, stat: string) => Promise<unknown>
+    upgradeStats: (cost: number, stat: string) => Promise<unknown> // upgradeStats returns a promise , don't ask why ^*^
     updateEnergyBar: (amount: number) => void;
     resetUser: () => void;
     setInitialState: (user: UserState) => void
@@ -46,11 +45,9 @@ interface UserActions {
     getUpgradeCost: (level: number) => number
     updateEnergy: (newEnergy: number) => void
     resetPointsPerClick: () => void
-
     applyFullEnergy: () => void;   // Function to apply the Full Energy boost
     checkAndResetBoosters: () => void; // Function to reset boosters every 24 hours
-
-
+    setLastOnline: (time: Date) => void; //  save last time online | for PPH calculation
 }
 type UpgradeState = {
     points: number;
@@ -65,7 +62,10 @@ type UserStore = UserState & UserActions;
 const { user } = useTelegram()
 const id = user?.id
 
-
+const increasePointsPerClickBy = 1
+const increaseEnergyLimitBy = 500
+const increaseRechargeSpeedBy = 1
+const multiplyTappingBoostBy = 2
 
 
 
@@ -88,6 +88,7 @@ const useUserStore = create(
             autoSaveIntervalId: null, // Store the interval ID to stop later if needed
             dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 },
             lastBoosterReset: new Date(),
+            lastOnline: null,
             setInitialState: (user) => { set((state) => ({ telegramId: id?.toString(), profitPerHour: user?.profitPerHour, pointsPerClick: user.pointsPerClick, energyBar: user.energyBar, currentEnergy: state.energyBar, rechargeSpeed: user.rechargeSpeed, upgradeLevelClick: user.upgradeLevelClick, upgradeLevelEnergy: user.upgradeLevelEnergy, upgradeLevelProfit: user.upgradeLevelProfit, upgradeLevelRecharge: user.upgradeLevelRecharge, dailyBoosterUses: { tappingBoost: 3, fullEnergy: 3 }, lastBoosterReset: new Date(), })) },
             // Action to update points
             updatePoints: (newPoints) => {
@@ -100,6 +101,9 @@ const useUserStore = create(
                 const baseCost = 2500; // Initial cost for level 1
                 const multiplier = 2; // Exponential multiplier
                 return Math.round(baseCost * Math.pow(multiplier, level - 1)); // Formula for cost
+            },
+            setLastOnline: (time) => {
+                set({ lastOnline: time })
             },
 
 
@@ -116,17 +120,17 @@ const useUserStore = create(
                                 case 'Multitap':
                                     updatedState = {
                                         points: state.points - cost,
-                                        pointsPerClick: state.pointsPerClick + 1,
+                                        pointsPerClick: state.pointsPerClick + increasePointsPerClickBy,
                                         upgradeLevelClick: state.upgradeLevelClick + 1,
                                     };
                                     resolve(); // Resolving promise if successful
                                     break;
 
-                                    break;
+
                                 case 'Energy Limit':
                                     updatedState = {
                                         points: state.points - cost,
-                                        energyBar: state.energyBar + 500,
+                                        energyBar: state.energyBar + increaseEnergyLimitBy,
                                         upgradeLevelEnergy: state.upgradeLevelEnergy + 1,
                                     };
                                     resolve(); // Resolving promise if successful
@@ -134,7 +138,7 @@ const useUserStore = create(
                                 case 'Recharge Speed':
                                     updatedState = {
                                         points: state.points - cost,
-                                        rechargeSpeed: state.rechargeSpeed + 1,
+                                        rechargeSpeed: state.rechargeSpeed + increaseRechargeSpeedBy,
                                         upgradeLevelRecharge: state.upgradeLevelRecharge + 1,
                                     };
                                     resolve(); // Resolving promise if successful
@@ -149,7 +153,7 @@ const useUserStore = create(
                                         }, 30000);
 
                                         updatedState = {
-                                            pointsPerClick: state.pointsPerClick * 2, // Apply multiplier
+                                            pointsPerClick: state.pointsPerClick * multiplyTappingBoostBy, // Apply multiplier
                                             dailyBoosterUses: {
                                                 ...state.dailyBoosterUses,
                                                 tappingBoost: state.dailyBoosterUses.tappingBoost - 1, // Deduct a booster use
@@ -203,7 +207,7 @@ const useUserStore = create(
                     });
                 });
             },
-
+            // reset points per click after tapping
             resetPointsPerClick: () => set((state) => {
                 return {
                     pointsPerClick: Math.round(state.pointsPerClick * 0.5)
@@ -211,31 +215,8 @@ const useUserStore = create(
             }),
 
 
-            // Action to upgrade points per click
-            upgradePointsPerClick: (cost) => set((state) => {
-                if (state.points >= cost) {
-                    return {
-                        points: state.points - cost,
-                        pointsPerClick: state.pointsPerClick + 1,
-                        upgradeLevelClick: state.upgradeLevelClick + 1,
-                    };
-                }
-                return state;
-            }),
-            // Action to upgrade energy limit
-            upgradeEnergyBar: (cost) => set((state) => {
-                if (state.points >= cost) {
 
-                }
-                return state;
-            }),
-            // Action to upgrade recharge speed
-            upgradeRechargeSpeed: (cost) => set((state) => {
-                if (state.points >= cost) {
 
-                }
-                return state;
-            }),
 
             // Action to upgrade profit per hour
             upgradeProfitPerHour: (cost) => set((state) => {
@@ -307,8 +288,6 @@ const useUserStore = create(
             saveProgress: async () => {
                 const { telegramId, points, pointsPerClick, energyBar, upgradeLevelClick, upgradeLevelEnergy, upgradeLevelRecharge, profitPerHour, rechargeSpeed } = get();
 
-
-
                 try {
                     const response = await fetch(`${API_URL}/save-progress`, {
                         method: 'POST',
@@ -340,8 +319,8 @@ const useUserStore = create(
             startAutoSave: async () => {
                 await get().saveProgress(); // Save after points update
 
-                console.log('Auto-saving...');
-                WebApp.showAlert("Hello world!");
+                // console.log('Auto-saving...');
+                // WebApp.showAlert("Hello world!");
 
                 // set({ autoSaveIntervalId: intervalId });
 

@@ -15,11 +15,15 @@ const Friends: React.FC = () => {
   useEffect(() => {
     const get = async () => {
       try {
-        const data = await getUserFriends("7480308778");
+        const data = await getUserFriends(telegramId);
+        if (!data) {
+         // setFriends([]);
+        }
         setFriends(data);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch friends.");
+
         setLoading(false);
       }
     };
@@ -101,7 +105,7 @@ const Friends: React.FC = () => {
 
           <div className="w-full">
             <Show
-              when={friends?.length != 0 && !loading}
+              when={friends?.length !== 0 && !loading}
               fallback={
                 <div className="text-center bg-gray-700 p-8 text-gray-500 w-11/12 mx-auto rounded-lg">
                   <Show

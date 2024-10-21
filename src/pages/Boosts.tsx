@@ -12,6 +12,7 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
 import { usePage } from "../context/appContext";
+import formatCardPrice from "../utils/formatCardPrice";
 interface BoostsProps {
   points: number | string;
 }
@@ -133,10 +134,11 @@ const Boosts: React.FC<BoostsProps> = () => {
 
   useEffect(() => {
     const updateCountdowns = () => {
+       
       // const pointsPerSecond = Math.floor(7000900 / 3600);
       const pointsPerSecond = Math.floor(profitPerHour / 3600);
-
-      updatePoints(points + pointsPerSecond);
+    
+      !isModalOpen && updatePoints(points + pointsPerSecond);
       updateEnergy(
         currentEnergy < energyBar
           ? currentEnergy + rechargeSpeed
@@ -155,16 +157,14 @@ const Boosts: React.FC<BoostsProps> = () => {
     <div className="overflow-auto text-white font-sans">
       <header className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-2">
-          <i className="fas fa-cloud text-white" />
           <span className="text-lg font-bold">Knight Coin</span>
           <i className="fas fa-check-circle text-blue-500" />
         </div>
-        <i className="fas fa-bars" />
       </header>
       {/* Share Balance */}
       <section className="text-center mt-6">
         <p className="text-sm">Your Share Balance</p>
-        <h1 className="text-5xl font-bold mt-1">{points.toLocaleString()}</h1>
+        <h1 className="text-5xl font-bold mt-1">{formatCardPrice(points)}</h1>
       </section>
       {/* Daily Boosters */}
       <section className="mt-8 px-4">
