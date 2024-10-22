@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import React from "react";
+import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Mine from "../icons/Mine";
 import Friends from "../icons/Friends";
@@ -8,6 +8,8 @@ import { binanceLogo, hamsterCoin } from "../images";
 import { Show } from "../utils/reactComponents";
 import { BOT_USERNAME } from "../server/variables";
 import { useTelegram } from "../hooks/useTelegram";
+import Invite from "../icons/Invite";
+import Copy from "../icons/Copy";
 
 interface FooterProps {
   setpage: React.Dispatch<React.SetStateAction<string>>;
@@ -16,24 +18,27 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = (props) => {
   const { user, WebApp } = useTelegram();
-  const [isCopied, setIsCopied] = useState(false);
+
   const referralLink = `http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`;
   // Function to copy the referral link
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
-      setIsCopied(true);
 
       // Show a success toast notification
-      toast.info("Referral link copied to clipboard!", {
-        position: 'top-center',
+      toast.dark("Referral link copied to clipboard!", {
+        position: "top-right",
         autoClose: 1000,
+        hideProgressBar: true,
+        toastId: "copy",
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        closeButton: false,
+        transition: Slide,
       });
-
-      // Reset the copied state after a short delay
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
       toast.error("Failed to copy the link. Try again.");
@@ -42,20 +47,20 @@ const Footer: React.FC<FooterProps> = (props) => {
   return (
     <div className="fixed bottom-0 left-0 w-full ">
       <Show when={props.page == "Friends"}>
-        <div className="flex items-center text-white mb-2 mx-2 gap-2">
+        <div className="flex items-center text-white mb-2  gap-2 w-11/12 mx-auto">
           <button
             onClick={() => {
               WebApp.openTelegramLink(referralLink);
             }}
-            className="bg-blue-500 p-4 w-9/12 rounded-lg"
+            className="bg-blue-500 p-4 w-9/12 flex items-center justify-center gap-2 capitalize text-lg rounded-lg"
           >
-            invite friends
+            invite friends <Invite className="w-6 h-5" />
           </button>
           <button
             onClick={() => copyToClipboard()}
-            className="bg-blue-500 p-4 w-3/12 rounded-md"
+            className="bg-blue-500 p-4 w-3/12 rounded-md flex justify-center"
           >
-            {isCopied ? "Copied!" : "Copy"}
+            <Copy className="h-6 w-6" />
           </button>
         </div>
         <ToastContainer
@@ -64,7 +69,11 @@ const Footer: React.FC<FooterProps> = (props) => {
             justifySelf: "end",
             whiteSpace: "nowrap",
             margin: "10px 5px",
+            border: "1px white",
           }}
+          bodyClassName={"  bg-opacity-50 text-white"}
+          toastClassName={"bg-black bg-opacity-70 text-white"}
+          progressClassName={"opacity-0"}
         />
       </Show>
       <div className="    max-w-xl bg-[#272a2f] flex mx-auto justify-around items-center z-40 rounded-3x text-xs">
