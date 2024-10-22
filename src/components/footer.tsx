@@ -19,11 +19,13 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = (props) => {
   const { user, WebApp } = useTelegram();
 
-  const referralLink = `http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`;
+  const referralLink = `https://t.me/share/url?url=http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`;
   // Function to copy the referral link
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(referralLink);
+      await navigator.clipboard.writeText(
+        `http://t.me/${BOT_USERNAME}?start=fren=${user?.id}`
+      );
 
       // Show a success toast notification
       toast.dark("Referral link copied to clipboard!", {
